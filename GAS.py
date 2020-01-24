@@ -126,11 +126,11 @@ if __name__ == "__main__":
             new_img = location_filters.effectRandomPixelShift(img)
         elif effect == 2:
             print("-- Effect: Color Smear")
-            new_img = color_filters.effectColorSmear(img)
+            new_img = color_filters.effect_color_smear(img)
         elif effect == 3:
             print("-- Effect: Color Scratch")
             scratch_dir = random.randrange(0, 2)
-            new_img = color_filters.effectColorScratch(img, 0, 0, 4, scratch_dir)
+            new_img = color_filters.effect_color_scratch(img, 0, 0, 4, scratch_dir)
         elif effect == 4:
             print("-- Effect: SoundWave")
             new_img = complex_filters.effectSoundWave(img)
@@ -145,22 +145,22 @@ if __name__ == "__main__":
             new_img = location_filters.effectHorizShift(img)
         elif effect == 8:
             print("-- Effect: Color Compression Bands")
-            new_img = color_filters.effectColorCompression(img)
+            new_img = color_filters.effect_color_compression(img)
         elif effect == 9:
             print("-- Effect: Harris Color Shift")
-            new_img = color_filters.effectHarrisEdgeColorShift(img, new_img_g)
+            new_img = color_filters.effect_harris_edge_color_shift(img, new_img_g)
         elif effect == 10:
             print("-- Effect: Copy Over (Original Vers.)")
             new_img = complex_filters.copyOver(img, src_img)
         elif effect == 11:
             print("-- Effect: Convolution Edge Lines")
-            new_img = color_filters.effectConvolutionEdgeLines(img)
+            new_img = color_filters.effect_convolution_edge_lines(img)
         elif effect == 12:
             print("-- Effect: Convolution Edge Dilation")
-            new_img = color_filters.effectConvolutionEdgeDilation(img)
+            new_img = color_filters.effect_convolution_edge_dilation(img)
         elif effect == 13:
             print("-- Effect: Convolution Dynamics")
-            new_img = color_filters.effectConvolutionDynamic(img)
+            new_img = color_filters.effect_convolution_dynamic(img)
         elif effect == 14:
             print("-- Effect: Cross Hatch")
             new_img = complex_filters.effectCrossHatch(img)
