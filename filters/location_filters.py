@@ -3,12 +3,12 @@ import random
 
 
 def effectRandomPixelShift(img, offset_range=100, patchx=0, patchy=0, patches=4):
-    '''
+    """
     Leave patchx, patchy at 0 to randomize!
     :param img:
     :param offset_range: max amount it can be shifted
     :return newimg:
-    '''
+    """
     newimg = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
@@ -67,13 +67,13 @@ def effectRandomPixelShift(img, offset_range=100, patchx=0, patchy=0, patches=4)
 
 
 def effectHorizShift(img):
-    '''
+    """
     Horizontal Shift effect: take entire set of rows and shift over,
     take entire selected row patch (y1 to y2) left;
     Increase offset each shift, but if overflow-> kick over to right side (width-current)
     :param img:
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)

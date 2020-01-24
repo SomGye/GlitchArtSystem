@@ -3,7 +3,7 @@ import random
 
 
 def effectSoundWave(img, colorshift=25):
-    '''
+    """
     Create a variable 'sound-wave' by having random up, down, and right
     amounts.
     The wave simulates the switch b/w up and down modes.
@@ -11,7 +11,7 @@ def effectSoundWave(img, colorshift=25):
      within (-colorshift, colorshift) range.
     :param img:
     :return:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     halfheight = int(height // 2)
@@ -55,13 +55,13 @@ def effectSoundWave(img, colorshift=25):
 
 
 def effectStatic(img):
-    '''
+    """
     Static effect: randomize 'pock' marks of random greyscale values;
     Loop 1: cover whole image with semi-uniform specks of random color
     Loop 2: choose random spots and fill those in too
     :param img:
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)
@@ -125,12 +125,12 @@ def effectStatic(img):
 
 
 def effectScanlines(img, lines=5):
-    '''
+    """
     Scanlines effect: horizontal lines of solid grayscale static,
     with bursts of color
     :param img:
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)
@@ -189,7 +189,7 @@ def effectScanlines(img, lines=5):
 
 
 def copyOver(img, orig_img, option=0):
-    '''
+    """
     Copy over original image parts over an edited image.
     Option 0: Random
     Option 1: Top
@@ -205,7 +205,7 @@ def copyOver(img, orig_img, option=0):
     :param orig_img:
     :param option:
     :return newimg:
-    '''
+    """
     newimg = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
@@ -265,12 +265,12 @@ def copyOver(img, orig_img, option=0):
 
 
 def effectCrossHatch(img, randomspots=150):
-    '''
+    """
     Random hatch spots in variable X patterns.
     Similar to static.
     :param img:
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)
@@ -340,7 +340,7 @@ def effectCrossHatch(img, randomspots=150):
 
 
 def copyOverColorDistort(img, orig_img, option=0):
-    '''
+    """
     Copy over dominant color columns from the orig. image parts
      over an edited image.
     The non-dominant channels are attenuated.
@@ -358,7 +358,7 @@ def copyOverColorDistort(img, orig_img, option=0):
     :param orig_img:
     :param option:
     :return newimg:
-    '''
+    """
     newimg = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx

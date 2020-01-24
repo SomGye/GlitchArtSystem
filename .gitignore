@@ -2,3 +2,5 @@
 *.xml
 test.jpg
 venv/
+*/__pycache__/
+results/

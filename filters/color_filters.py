@@ -4,7 +4,7 @@ import random
 
 
 def effectColorSmear(img, patchx=0, patchy=0, patches=5):
-    '''
+    """
     Returns a 'smeared' version of img, where given patch has colors copied over
     a set amount.
     Smear from left to right.
@@ -13,7 +13,7 @@ def effectColorSmear(img, patchx=0, patchy=0, patches=5):
     :param patchy:
     :param patches:
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)
@@ -61,7 +61,7 @@ def effectColorSmear(img, patchx=0, patchy=0, patches=5):
     return newimg
 
 def effectColorScratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
-    '''
+    """
     Returns a 'scratched' version of img, where given patch has DOMINANT color (BGR) copied over
     a set amount.
     Smear from left to right.
@@ -71,7 +71,7 @@ def effectColorScratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
     :param patches:
     :param scratchdir: 0 for down, 1/else for right
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)
@@ -150,12 +150,12 @@ def effectColorScratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
 
 
 def effectColorCompression(img, patches=4):
-    '''
+    """
     Color Compression effect: divide color by patch
     depending upon dominant channel chosen
     :param img:
     :return newimg:
-    '''
+    """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
     newimg = np.copy(img)
@@ -192,7 +192,7 @@ def effectColorCompression(img, patches=4):
     return newimg
 
 def effectHarrisEdgeColorShift(img, img_g):
-    '''
+    """
     Use Harris Corner Detector to find edges and corners,
     then check if current pixel is on left/right half of image.
     If left half, get dominant color values from pixels to the right by 1/2/3,
@@ -201,7 +201,7 @@ def effectHarrisEdgeColorShift(img, img_g):
     :param img:
     :param img_g: greyscale vers. of img
     :return cornerimg:
-    '''
+    """
     #Define variables
     height = img.shape[0]
     width = img.shape[1]
@@ -361,14 +361,14 @@ def effectHarrisEdgeColorShift(img, img_g):
 
 
 def effectConvolutionEdgeLines(img, patches=2):
-    '''
+    """
     Use a 3x3 convolution kernel to detect horizontal lines,
     then within a patch of (istop-istart, jstop-jstart) determine
     whether to convolve a particular color channel or all of them evenly, per j.
     :param img:
     :param patches: optional # of patches
     :return newimg:
-    '''
+    """
     newimg = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
@@ -432,13 +432,13 @@ def effectConvolutionEdgeLines(img, patches=2):
     return newimg
 
 def effectConvolutionEdgeDilation(img, patches=2):
-    '''
+    """
     Use Edge Detection Convolution kernel, then dilate the result,
      allowing purposeful integer underflow.
     :param img:
     :param patches: optional # of patches
     :return newimg:
-    '''
+    """
     newimg = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
@@ -508,11 +508,11 @@ def effectConvolutionEdgeDilation(img, patches=2):
     return newimg
 
 def effectConvolutionDynamic(img, patches=2):
-    '''
+    """
     Generate a different Convolution Kernel each time!
     :param img:
     :return newimg:
-    '''
+    """
     newimg = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
