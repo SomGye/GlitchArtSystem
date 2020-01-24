@@ -133,13 +133,13 @@ if __name__ == "__main__":
             new_img = color_filters.effect_color_scratch(img, 0, 0, 4, scratch_dir)
         elif effect == 4:
             print("-- Effect: SoundWave")
-            new_img = complex_filters.effectSoundWave(img)
+            new_img = complex_filters.effect_soundwave(img)
         elif effect == 5:
             print("-- Effect: Static")
-            new_img = complex_filters.effectStatic(img)
+            new_img = complex_filters.effect_static(img)
         elif effect == 6:
             print("-- Effect: Scanlines")
-            new_img = complex_filters.effectScanlines(img)
+            new_img = complex_filters.effect_scanlines(img)
         elif effect == 7:
             print("-- Effect: Horiz. Shift")
             new_img = location_filters.effect_horiz_shift(img)
@@ -151,7 +151,7 @@ if __name__ == "__main__":
             new_img = color_filters.effect_harris_edge_color_shift(img, new_img_g)
         elif effect == 10:
             print("-- Effect: Copy Over (Original Vers.)")
-            new_img = complex_filters.copyOver(img, src_img)
+            new_img = complex_filters.effect_copy_over(img, src_img)
         elif effect == 11:
             print("-- Effect: Convolution Edge Lines")
             new_img = color_filters.effect_convolution_edge_lines(img)
@@ -163,10 +163,10 @@ if __name__ == "__main__":
             new_img = color_filters.effect_convolution_dynamic(img)
         elif effect == 14:
             print("-- Effect: Cross Hatch")
-            new_img = complex_filters.effectCrossHatch(img)
+            new_img = complex_filters.effect_cross_hatch(img)
         elif effect == 15:
             print("-- Effect: Copy Over (Color Distort)")
-            new_img = complex_filters.copyOverColorDistort(img, src_img)
+            new_img = complex_filters.effect_copy_over_color_distort(img, src_img)
         return new_img
 
 
