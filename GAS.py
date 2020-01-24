@@ -123,7 +123,7 @@ if __name__ == "__main__":
             raise TypeError('\nInvalid Image Matrix Detected - Try another file.')
         if effect == 1:  # call 1st effect
             print("-- Effect: Random Pixel Shift")
-            new_img = location_filters.effectRandomPixelShift(img)
+            new_img = location_filters.effect_random_pixel_shift(img)
         elif effect == 2:
             print("-- Effect: Color Smear")
             new_img = color_filters.effect_color_smear(img)
@@ -142,7 +142,7 @@ if __name__ == "__main__":
             new_img = complex_filters.effectScanlines(img)
         elif effect == 7:
             print("-- Effect: Horiz. Shift")
-            new_img = location_filters.effectHorizShift(img)
+            new_img = location_filters.effect_horiz_shift(img)
         elif effect == 8:
             print("-- Effect: Color Compression Bands")
             new_img = color_filters.effect_color_compression(img)

@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 
-def effectRandomPixelShift(img, offset_range=100, patchx=0, patchy=0, patches=4):
+def effect_random_pixel_shift(img, offset_range=100, patchx=0, patchy=0, patches=4):
     """
     Leave patchx, patchy at 0 to randomize!
     :param img:
@@ -18,12 +18,12 @@ def effectRandomPixelShift(img, offset_range=100, patchx=0, patchy=0, patches=4)
     patchy_random = False
 
     # If patch sizes are left a 0, randomize!
-    if (patchx == 0):
+    if patchx == 0:
         patchx_random = True
-    if (patchy == 0):
+    if patchy == 0:
         patchy_random = True
 
-    if (patches < min_patches):
+    if patches < min_patches:
         patches = min_patches
 
     # Run loop for 'patches' number of times,
@@ -31,9 +31,9 @@ def effectRandomPixelShift(img, offset_range=100, patchx=0, patchy=0, patches=4)
     # else, run regular loop thru whole img
     for p in range(patches):
         # If patch size is left at 0, randomize!
-        if (patchx_random == True):
+        if patchx_random:
             patchx = random.randrange(int(width // 10), int(width // 7))
-        if (patchy_random == True):
+        if patchy_random:
             patchy = random.randrange(int(height // 13), int(height // 8))
         istart = random.randrange(0 + patchx, width - patchx)
         jstart = random.randrange(0 + patchy, height - patchy)
@@ -41,32 +41,32 @@ def effectRandomPixelShift(img, offset_range=100, patchx=0, patchy=0, patches=4)
             for j in range(jstart, jstart + patchy):
                 # Determine if we will shift:
                 doShift = random.randrange(0, 3)
-                if (doShift == 0):
+                if doShift == 0:
                     # Determine offset amt and location
                     current_offset = random.randrange(-1 * offset_range, offset_range)
                     offset_where = random.randrange(0, 3)
                     # Produce offset on img pixel locations...
                     current_offset_abs = abs(current_offset)
-                    if (offset_where == 0):  # x
-                        if ((current_offset_abs + j) < height):
+                    if offset_where == 0:  # x
+                        if (current_offset_abs + j) < height:
                             newimg[j, i, 0] = img[j + current_offset, i, 0]
                             newimg[j, i, 1] = img[j + current_offset, i, 1]
                             newimg[j, i, 2] = img[j + current_offset, i, 2]
-                    elif (offset_where == 1):  # y
-                        if ((current_offset_abs + i) < width):
+                    elif offset_where == 1:  # y
+                        if (current_offset_abs + i) < width:
                             newimg[j, i, 0] = img[j, i + current_offset, 0]
                             newimg[j, i, 1] = img[j, i + current_offset, 1]
                             newimg[j, i, 2] = img[j, i + current_offset, 2]
-                    elif (offset_where == 2):  # x, y
-                        if ((current_offset_abs + j) < height):
-                            if ((current_offset_abs + i) < width):
+                    elif offset_where == 2:  # x, y
+                        if (current_offset_abs + j) < height:
+                            if (current_offset_abs + i) < width:
                                 newimg[j, i, 0] = img[j + current_offset, i + current_offset, 0]
                                 newimg[j, i, 1] = img[j + current_offset, i + current_offset, 1]
                                 newimg[j, i, 2] = img[j + current_offset, i + current_offset, 2]
     return newimg
 
 
-def effectHorizShift(img):
+def effect_horiz_shift(img):
     """
     Horizontal Shift effect: take entire set of rows and shift over,
     take entire selected row patch (y1 to y2) left;
@@ -90,7 +90,7 @@ def effectHorizShift(img):
         patchysize = random.randrange(10, int(height // 4))
         shift = random.randrange(10, int(width // 5))
         patchend = patchy + patchysize
-        if (patchend >= height):  # ensure within size limit
+        if patchend >= height:  # ensure within size limit
             patchend = height - 1
 
         # Randomize color channel to focus on:
@@ -98,11 +98,11 @@ def effectHorizShift(img):
 
         # Get divisor amount:
         lowmedhigh = random.randrange(0, 3)
-        if (lowmedhigh == 0):
+        if lowmedhigh == 0:
             divisor = low
-        elif (lowmedhigh == 1):
+        elif lowmedhigh == 1:
             divisor = med
-        elif (lowmedhigh == 2):
+        elif lowmedhigh == 2:
             divisor = high
 
         # Loop thru patch window
@@ -110,17 +110,17 @@ def effectHorizShift(img):
             for j in range(patchy, patchend):
                 # Get actual shift amount, and determine if overflow:
                 shiftresult = i - shift
-                if (shiftresult < 0):
+                if shiftresult < 0:
                     shiftresult = width + shiftresult
-                if (colorfocus == 0):
+                if colorfocus == 0:
                     newimg[j, shiftresult, 0] = img[j, i, 0]
                     newimg[j, shiftresult, 1] = int(img[j, i, 1] // divisor)
                     newimg[j, shiftresult, 2] = int(img[j, i, 2] // divisor)
-                elif (colorfocus == 1):
+                elif colorfocus == 1:
                     newimg[j, shiftresult, 0] = int(img[j, i, 0] // divisor)
                     newimg[j, shiftresult, 1] = img[j, i, 1]
                     newimg[j, shiftresult, 2] = int(img[j, i, 2] // divisor)
-                elif (colorfocus == 2):
+                elif colorfocus == 2:
                     newimg[j, shiftresult, 0] = int(img[j, i, 0] // divisor)
                     newimg[j, shiftresult, 1] = int(img[j, i, 1] // divisor)
                     newimg[j, shiftresult, 2] = img[j, i, 2]
