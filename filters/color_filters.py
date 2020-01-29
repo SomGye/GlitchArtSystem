@@ -12,11 +12,11 @@ def effect_color_smear(img, patchx=0, patchy=0, patches=5):
     :param patchx:
     :param patchy:
     :param patches:
-    :return newimg:
+    :return new_img:
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     min_patches = 5
     patchx_random = False
     patchy_random = False
@@ -55,10 +55,10 @@ def effect_color_smear(img, patchx=0, patchy=0, patches=5):
             colorvalg = img[jstart, i, 1]
             colorvalr = img[jstart, i, 2]
             for j in range(jstart, jstart + patchy):
-                newimg[j, i, 0] = colorvalb
-                newimg[j, i, 1] = colorvalg
-                newimg[j, i, 2] = colorvalr
-    return newimg
+                new_img[j, i, 0] = colorvalb
+                new_img[j, i, 1] = colorvalg
+                new_img[j, i, 2] = colorvalr
+    return new_img
 
 
 def effect_color_scratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
@@ -71,11 +71,11 @@ def effect_color_scratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
     :param patchy:
     :param patches:
     :param scratchdir: 0 for down, 1/else for right
-    :return newimg:
+    :return new_img:
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     min_patches = 4
     patchx_random = False
     patchy_random = False
@@ -122,11 +122,11 @@ def effect_color_scratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
                 for j in range(jstart, jstart + scratchamt):
                     # Pick channel
                     if (colormax == colorvalb):
-                        newimg[j, i, 0] = colorvalb
+                        new_img[j, i, 0] = colorvalb
                     elif (colormax == colorvalg):
-                        newimg[j, i, 1] = colorvalg
+                        new_img[j, i, 1] = colorvalg
                     elif (colormax == colorvalr):
-                        newimg[j, i, 2] = colorvalr
+                        new_img[j, i, 2] = colorvalr
         else:
             # Loop thru window
             scratchamt = random.randrange(5, patchx)
@@ -142,12 +142,12 @@ def effect_color_scratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
                     colormax = max([colorvalb, colorvalg, colorvalr])
                     # Pick channel
                     if (colormax == colorvalb):
-                        newimg[j, i, 0] = colorvalb
+                        new_img[j, i, 0] = colorvalb
                     elif (colormax == colorvalg):
-                        newimg[j, i, 1] = colorvalg
+                        new_img[j, i, 1] = colorvalg
                     elif (colormax == colorvalr):
-                        newimg[j, i, 2] = colorvalr
-    return newimg
+                        new_img[j, i, 2] = colorvalr
+    return new_img
 
 
 def effect_color_compression(img, patches=4):
@@ -156,11 +156,11 @@ def effect_color_compression(img, patches=4):
     depending upon dominant channel chosen
     :param img:
     :param patches:
-    :return newimg:
+    :return new_img:
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     if patches == 4:
         patches = random.randrange(4, 9)
 
@@ -180,18 +180,18 @@ def effect_color_compression(img, patches=4):
                 # Randomize color channel to focus on:
                 colorfocus = random.randrange(0, 3)
                 if colorfocus == 0:
-                    newimg[j, i, 0] = img[j, i, 0]
-                    newimg[j, i, 1] = int(img[j, i, 1] // 1.4)
-                    newimg[j, i, 2] = int(img[j, i, 2] // 1.4)
+                    new_img[j, i, 0] = img[j, i, 0]
+                    new_img[j, i, 1] = int(img[j, i, 1] // 1.4)
+                    new_img[j, i, 2] = int(img[j, i, 2] // 1.4)
                 elif colorfocus == 1:
-                    newimg[j, i, 0] = int(img[j, i, 0] // 1.4)
-                    newimg[j, i, 1] = img[j, i, 1]
-                    newimg[j, i, 2] = int(img[j, i, 2] // 1.4)
+                    new_img[j, i, 0] = int(img[j, i, 0] // 1.4)
+                    new_img[j, i, 1] = img[j, i, 1]
+                    new_img[j, i, 2] = int(img[j, i, 2] // 1.4)
                 elif colorfocus == 2:
-                    newimg[j, i, 0] = int(img[j, i, 0] // 1.4)
-                    newimg[j, i, 1] = int(img[j, i, 1] // 1.4)
-                    newimg[j, i, 2] = img[j, i, 2]
-    return newimg
+                    new_img[j, i, 0] = int(img[j, i, 0] // 1.4)
+                    new_img[j, i, 1] = int(img[j, i, 1] // 1.4)
+                    new_img[j, i, 2] = img[j, i, 2]
+    return new_img
 
 
 def effect_harris_edge_color_shift(img, img_g):
@@ -203,7 +203,7 @@ def effect_harris_edge_color_shift(img, img_g):
     and then heavily attenuate the non-dominant channels.
     :param img:
     :param img_g: greyscale vers. of img
-    :return cornerimg:
+    :return corner_img:
     """
     # Define variables
     height = img.shape[0]
@@ -212,7 +212,7 @@ def effect_harris_edge_color_shift(img, img_g):
     offset = window_size // 2  # Offset is 1/2window size in each direction
     k = random.randrange(4, 8) * 0.01  # Harris Corner constant; usually b/w 0.04-0.07
     threshold = random.randrange(9900000000, 11200000000)  # Corner Response Threshold; randomize within safe params.
-    cornerimg = np.copy(img)  # init final corner img, need R channel!
+    corner_img = np.copy(img)  # init final corner img, need R channel!
     r = 0  # corner response value, will later use equation: det-k(trace^2)
     Ixx = np.zeros((height, width, 1), np.float32)  # hold I-values; NOTE the 32-bit floats needed!
     Ixy = np.zeros((height, width, 1), np.float32)
@@ -232,25 +232,25 @@ def effect_harris_edge_color_shift(img, img_g):
 
     # Main Harris loops:
     for y in range(offset, height - (window_size + 1)):
-        doHarris = random.randrange(0, 5)
+        do_harris = random.randrange(0, 5)
         for x in range(offset, width - (window_size + 1)):
             # Windowing function:
-            windowIxx = Ixx[y - offset:y + offset + 1, x - offset:x + offset + 1]  # multi-shape array
-            windowIxy = Ixy[y - offset:y + offset + 1, x - offset:x + offset + 1]
-            windowIyy = Iyy[y - offset:y + offset + 1, x - offset:x + offset + 1]
+            window_ixx = Ixx[y - offset:y + offset + 1, x - offset:x + offset + 1]  # multi-shape array
+            window_ixy = Ixy[y - offset:y + offset + 1, x - offset:x + offset + 1]
+            window_iyy = Iyy[y - offset:y + offset + 1, x - offset:x + offset + 1]
 
             # Sum of Squares for windows:
-            sumIxx = windowIxx.sum()
-            sumIxy = windowIxy.sum()
-            sumIyy = windowIyy.sum()
+            sum_ixx = window_ixx.sum()
+            sum_ixy = window_ixy.sum()
+            sum_iyy = window_iyy.sum()
 
             # Find determinant and trace, use to get corner response
-            det = (sumIxx * sumIyy) - (sumIxy ** 2)
-            trace = sumIxx + sumIyy
+            det = (sum_ixx * sum_iyy) - (sum_ixy ** 2)
+            trace = sum_ixx + sum_iyy
             r = det - (k * (trace ** 2))  # harris r corner response
 
             # If corner response is over threshold, mark it as valid (red):
-            if doHarris == 0:
+            if do_harris == 0:
                 if (r < -599000000) or (r > threshold):  # test for edges/corners
                     # Copy initial color:
                     colorvalb = img[y, x, 0]
@@ -263,103 +263,103 @@ def effect_harris_edge_color_shift(img, img_g):
                         # Pick channel
                         if colormax == colorvalb:
                             # Stripe 1
-                            cornerimg[y, x + 1, 0] = colorvalb
-                            cornerimg[y, x + 1, 1] = colorvalg // 2
-                            cornerimg[y, x + 1, 2] = colorvalr // 3
+                            corner_img[y, x + 1, 0] = colorvalb
+                            corner_img[y, x + 1, 1] = colorvalg // 2
+                            corner_img[y, x + 1, 2] = colorvalr // 3
                             # Stripe 2
-                            cornerimg[y, x + 2, 0] = colorvalb // 2
-                            cornerimg[y, x + 2, 1] = colorvalg
-                            cornerimg[y, x + 2, 2] = colorvalr // 2
+                            corner_img[y, x + 2, 0] = colorvalb // 2
+                            corner_img[y, x + 2, 1] = colorvalg
+                            corner_img[y, x + 2, 2] = colorvalr // 2
                             # Stripe 3
-                            cornerimg[y, x + 3, 0] = colorvalb // 3
-                            cornerimg[y, x + 3, 1] = colorvalg // 2
-                            cornerimg[y, x + 3, 2] = colorvalr
-                            cornerimg[y, x + 4, 0] = colorvalb // 3
-                            cornerimg[y, x + 4, 1] = colorvalg // 2
-                            cornerimg[y, x + 4, 2] = colorvalr
+                            corner_img[y, x + 3, 0] = colorvalb // 3
+                            corner_img[y, x + 3, 1] = colorvalg // 2
+                            corner_img[y, x + 3, 2] = colorvalr
+                            corner_img[y, x + 4, 0] = colorvalb // 3
+                            corner_img[y, x + 4, 1] = colorvalg // 2
+                            corner_img[y, x + 4, 2] = colorvalr
                         elif colormax == colorvalg:
                             # Stripe 1
-                            cornerimg[y, x + 1, 0] = colorvalb // 2
-                            cornerimg[y, x + 1, 1] = colorvalg
-                            cornerimg[y, x + 1, 2] = colorvalr // 2
+                            corner_img[y, x + 1, 0] = colorvalb // 2
+                            corner_img[y, x + 1, 1] = colorvalg
+                            corner_img[y, x + 1, 2] = colorvalr // 2
                             # Stripe 2
-                            cornerimg[y, x + 2, 0] = colorvalb // 3
-                            cornerimg[y, x + 2, 1] = colorvalg // 2
-                            cornerimg[y, x + 2, 2] = colorvalr
+                            corner_img[y, x + 2, 0] = colorvalb // 3
+                            corner_img[y, x + 2, 1] = colorvalg // 2
+                            corner_img[y, x + 2, 2] = colorvalr
                             # Stripe 3
-                            cornerimg[y, x + 3, 0] = colorvalb
-                            cornerimg[y, x + 3, 1] = colorvalg // 2
-                            cornerimg[y, x + 3, 2] = colorvalr // 3
-                            cornerimg[y, x + 4, 0] = colorvalb
-                            cornerimg[y, x + 4, 1] = colorvalg // 2
-                            cornerimg[y, x + 4, 2] = colorvalr // 3
+                            corner_img[y, x + 3, 0] = colorvalb
+                            corner_img[y, x + 3, 1] = colorvalg // 2
+                            corner_img[y, x + 3, 2] = colorvalr // 3
+                            corner_img[y, x + 4, 0] = colorvalb
+                            corner_img[y, x + 4, 1] = colorvalg // 2
+                            corner_img[y, x + 4, 2] = colorvalr // 3
                         elif colormax == colorvalr:
                             # Stripe 1
-                            cornerimg[y, x + 1, 0] = colorvalb // 3
-                            cornerimg[y, x + 1, 1] = colorvalg // 2
-                            cornerimg[y, x + 1, 2] = colorvalr
+                            corner_img[y, x + 1, 0] = colorvalb // 3
+                            corner_img[y, x + 1, 1] = colorvalg // 2
+                            corner_img[y, x + 1, 2] = colorvalr
                             # Stripe 2
-                            cornerimg[y, x + 2, 0] = colorvalb
-                            cornerimg[y, x + 2, 1] = colorvalg // 2
-                            cornerimg[y, x + 2, 2] = colorvalr // 3
+                            corner_img[y, x + 2, 0] = colorvalb
+                            corner_img[y, x + 2, 1] = colorvalg // 2
+                            corner_img[y, x + 2, 2] = colorvalr // 3
                             # Stripe 3
-                            cornerimg[y, x + 3, 0] = colorvalb // 2
-                            cornerimg[y, x + 3, 1] = colorvalg
-                            cornerimg[y, x + 3, 2] = colorvalr // 2
-                            cornerimg[y, x + 4, 0] = colorvalb // 2
-                            cornerimg[y, x + 4, 1] = colorvalg
-                            cornerimg[y, x + 4, 2] = colorvalr // 2
+                            corner_img[y, x + 3, 0] = colorvalb // 2
+                            corner_img[y, x + 3, 1] = colorvalg
+                            corner_img[y, x + 3, 2] = colorvalr // 2
+                            corner_img[y, x + 4, 0] = colorvalb // 2
+                            corner_img[y, x + 4, 1] = colorvalg
+                            corner_img[y, x + 4, 2] = colorvalr // 2
                     elif x > (width // 2):
                         # Pick channel
                         if colormax == colorvalb:
                             # Stripe 1
-                            cornerimg[y, x - 1, 0] = colorvalb
-                            cornerimg[y, x - 1, 1] = colorvalg // 2
-                            cornerimg[y, x - 1, 2] = colorvalr // 3
+                            corner_img[y, x - 1, 0] = colorvalb
+                            corner_img[y, x - 1, 1] = colorvalg // 2
+                            corner_img[y, x - 1, 2] = colorvalr // 3
                             # Stripe 2
-                            cornerimg[y, x - 2, 0] = colorvalb // 2
-                            cornerimg[y, x - 2, 1] = colorvalg
-                            cornerimg[y, x - 2, 2] = colorvalr // 2
+                            corner_img[y, x - 2, 0] = colorvalb // 2
+                            corner_img[y, x - 2, 1] = colorvalg
+                            corner_img[y, x - 2, 2] = colorvalr // 2
                             # Stripe 3
-                            cornerimg[y, x - 3, 0] = colorvalb // 3
-                            cornerimg[y, x - 3, 1] = colorvalg // 2
-                            cornerimg[y, x - 3, 2] = colorvalr
-                            cornerimg[y, x - 4, 0] = colorvalb // 3
-                            cornerimg[y, x - 4, 1] = colorvalg // 2
-                            cornerimg[y, x - 4, 2] = colorvalr
+                            corner_img[y, x - 3, 0] = colorvalb // 3
+                            corner_img[y, x - 3, 1] = colorvalg // 2
+                            corner_img[y, x - 3, 2] = colorvalr
+                            corner_img[y, x - 4, 0] = colorvalb // 3
+                            corner_img[y, x - 4, 1] = colorvalg // 2
+                            corner_img[y, x - 4, 2] = colorvalr
                         elif colormax == colorvalg:
                             # Stripe 1
-                            cornerimg[y, x - 1, 0] = colorvalb // 2
-                            cornerimg[y, x - 1, 1] = colorvalg
-                            cornerimg[y, x - 1, 2] = colorvalr // 2
+                            corner_img[y, x - 1, 0] = colorvalb // 2
+                            corner_img[y, x - 1, 1] = colorvalg
+                            corner_img[y, x - 1, 2] = colorvalr // 2
                             # Stripe 2
-                            cornerimg[y, x - 2, 0] = colorvalb // 3
-                            cornerimg[y, x - 2, 1] = colorvalg // 2
-                            cornerimg[y, x - 2, 2] = colorvalr
+                            corner_img[y, x - 2, 0] = colorvalb // 3
+                            corner_img[y, x - 2, 1] = colorvalg // 2
+                            corner_img[y, x - 2, 2] = colorvalr
                             # Stripe 3
-                            cornerimg[y, x - 3, 0] = colorvalb
-                            cornerimg[y, x - 3, 1] = colorvalg // 2
-                            cornerimg[y, x - 3, 2] = colorvalr // 3
-                            cornerimg[y, x - 4, 0] = colorvalb
-                            cornerimg[y, x - 4, 1] = colorvalg // 2
-                            cornerimg[y, x - 4, 2] = colorvalr // 3
+                            corner_img[y, x - 3, 0] = colorvalb
+                            corner_img[y, x - 3, 1] = colorvalg // 2
+                            corner_img[y, x - 3, 2] = colorvalr // 3
+                            corner_img[y, x - 4, 0] = colorvalb
+                            corner_img[y, x - 4, 1] = colorvalg // 2
+                            corner_img[y, x - 4, 2] = colorvalr // 3
                         elif colormax == colorvalr:
                             # Stripe 1
-                            cornerimg[y, x - 1, 0] = colorvalb // 3
-                            cornerimg[y, x - 1, 1] = colorvalg // 2
-                            cornerimg[y, x - 1, 2] = colorvalr
+                            corner_img[y, x - 1, 0] = colorvalb // 3
+                            corner_img[y, x - 1, 1] = colorvalg // 2
+                            corner_img[y, x - 1, 2] = colorvalr
                             # Stripe 2
-                            cornerimg[y, x - 2, 0] = colorvalb
-                            cornerimg[y, x - 2, 1] = colorvalg // 2
-                            cornerimg[y, x - 2, 2] = colorvalr // 3
+                            corner_img[y, x - 2, 0] = colorvalb
+                            corner_img[y, x - 2, 1] = colorvalg // 2
+                            corner_img[y, x - 2, 2] = colorvalr // 3
                             # Stripe 3
-                            cornerimg[y, x - 3, 0] = colorvalb // 2
-                            cornerimg[y, x - 3, 1] = colorvalg
-                            cornerimg[y, x - 3, 2] = colorvalr // 2
-                            cornerimg[y, x - 4, 0] = colorvalb // 2
-                            cornerimg[y, x - 4, 1] = colorvalg
-                            cornerimg[y, x - 4, 2] = colorvalr // 2
-    return cornerimg
+                            corner_img[y, x - 3, 0] = colorvalb // 2
+                            corner_img[y, x - 3, 1] = colorvalg
+                            corner_img[y, x - 3, 2] = colorvalr // 2
+                            corner_img[y, x - 4, 0] = colorvalb // 2
+                            corner_img[y, x - 4, 1] = colorvalg
+                            corner_img[y, x - 4, 2] = colorvalr // 2
+    return corner_img
 
 
 def effect_convolution_edge_lines(img, patches=2):
@@ -369,26 +369,22 @@ def effect_convolution_edge_lines(img, patches=2):
     whether to convolve a particular color channel or all of them evenly, per j.
     :param img:
     :param patches: optional # of patches
-    :return newimg:
+    :return new_img:
     """
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
 
-    convoMatrix = np.array([[-1, -1, -1], [2, 2, 2], [-1, -1, -1]])  # horiz lines
-    sumFilters = 1  # needed to ensure stability with all imgs
+    convo_matrix = np.array([[-1, -1, -1], [2, 2, 2], [-1, -1, -1]])  # horiz lines
+    sum_filters = 1  # needed to ensure stability with all imgs
 
     for p in range(patches):
-        doAny = random.randrange(0, 4)
-        if (doAny == 0):
+        do_any = random.randrange(0, 4)
+        if do_any == 0:
             continue
         # Determine whether to have patch size in orig. style, or new style
-        doStyle = random.randrange(0, 2)
-        istart = 0  # init. for scope
-        istop = 0
-        jstart = 0
-        jstop = 0
-        if doStyle == 0:  # orig. window
+        do_style = random.randrange(0, 2)
+        if do_style == 0:  # orig. window
             istart = random.randrange(int(width // 2.5))
             istop = random.randrange(istart, int(width // 1.7))
             jstart = random.randrange(int(height // 2.5))
@@ -399,39 +395,39 @@ def effect_convolution_edge_lines(img, patches=2):
             jstart = random.randrange(int(height // 11), int(height // 2.2))
             jstop = random.randrange(int(height // 1.8), int(height // 1.05))
         for i in range(istart, istop):
-            doAny = random.randrange(0, 4)
-            if doAny == 0:
+            do_any = random.randrange(0, 4)
+            if do_any == 0:
                 continue
             for j in range(jstart, jstop):
-                doAllChannels = random.randrange(0, 8)  # if 0, pick 1 channel, else do all channels; was 0,8
-                sumFxM = 0
-                if doAllChannels == 0:
+                do_all_channels = random.randrange(0, 8)  # if 0, pick 1 channel, else do all channels; was 0,8
+                sum_FxM = 0
+                if do_all_channels == 0:
                     c = random.randrange(0, 3)
-                    sumFxM += int((convoMatrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
-                    sumFxM += int((convoMatrix[0][1] * int(img[j][i - 1][c])))  # up1
-                    sumFxM += int((convoMatrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
-                    sumFxM += int((convoMatrix[1][0] * int(img[j - 1][i][c])))  # left1
-                    sumFxM += int((convoMatrix[1][1] * int(img[j][i][c])))  # center
-                    sumFxM += int((convoMatrix[1][2] * int(img[j + 1][i][c])))  # right1
-                    sumFxM += int((convoMatrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
-                    sumFxM += int((convoMatrix[2][1] * int(img[j][i + 1][c])))  # down1
-                    sumFxM += int((convoMatrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
-                    result = int((sumFxM / sumFilters))
-                    newimg[j, i, c] = result
+                    sum_FxM += int((convo_matrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
+                    sum_FxM += int((convo_matrix[0][1] * int(img[j][i - 1][c])))  # up1
+                    sum_FxM += int((convo_matrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
+                    sum_FxM += int((convo_matrix[1][0] * int(img[j - 1][i][c])))  # left1
+                    sum_FxM += int((convo_matrix[1][1] * int(img[j][i][c])))  # center
+                    sum_FxM += int((convo_matrix[1][2] * int(img[j + 1][i][c])))  # right1
+                    sum_FxM += int((convo_matrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
+                    sum_FxM += int((convo_matrix[2][1] * int(img[j][i + 1][c])))  # down1
+                    sum_FxM += int((convo_matrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
+                    result = int((sum_FxM / sum_filters))
+                    new_img[j, i, c] = result
                 else:
                     for c in range(0, 3):
-                        sumFxM += int((convoMatrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
-                        sumFxM += int((convoMatrix[0][1] * int(img[j][i - 1][c])))  # up1
-                        sumFxM += int((convoMatrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
-                        sumFxM += int((convoMatrix[1][0] * int(img[j - 1][i][c])))  # left1
-                        sumFxM += int((convoMatrix[1][1] * int(img[j][i][c])))  # center
-                        sumFxM += int((convoMatrix[1][2] * int(img[j + 1][i][c])))  # right1
-                        sumFxM += int((convoMatrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
-                        sumFxM += int((convoMatrix[2][1] * int(img[j][i + 1][c])))  # down1
-                        sumFxM += int((convoMatrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
-                        result = int((sumFxM / sumFilters))
-                        newimg[j, i, c] = result
-    return newimg
+                        sum_FxM += int((convo_matrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
+                        sum_FxM += int((convo_matrix[0][1] * int(img[j][i - 1][c])))  # up1
+                        sum_FxM += int((convo_matrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
+                        sum_FxM += int((convo_matrix[1][0] * int(img[j - 1][i][c])))  # left1
+                        sum_FxM += int((convo_matrix[1][1] * int(img[j][i][c])))  # center
+                        sum_FxM += int((convo_matrix[1][2] * int(img[j + 1][i][c])))  # right1
+                        sum_FxM += int((convo_matrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
+                        sum_FxM += int((convo_matrix[2][1] * int(img[j][i + 1][c])))  # down1
+                        sum_FxM += int((convo_matrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
+                        result = int((sum_FxM / sum_filters))
+                        new_img[j, i, c] = result
+    return new_img
 
 
 def effect_convolution_edge_dilation(img, patches=2):
@@ -440,23 +436,23 @@ def effect_convolution_edge_dilation(img, patches=2):
      allowing purposeful integer underflow.
     :param img:
     :param patches: optional # of patches
-    :return newimg:
+    :return new_img:
     """
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
 
-    convoMatrix = np.array([[0, 1, 0],
+    convo_matrix = np.array([[0, 1, 0],
                             [1, -4, 1],
                             [0, 1, 0]])  # edge detect
 
     for p in range(patches):
-        doAny = random.randrange(0, 4)
-        if (doAny == 0):
+        do_any = random.randrange(0, 4)
+        if do_any == 0:
             continue
         # Determine whether to have patch size in orig. style, or new style
-        doStyle = random.randrange(0, 2)
-        if doStyle == 0:  # orig. window
+        do_style = random.randrange(0, 2)
+        if do_style == 0:  # orig. window
             istart = random.randrange(int(width // 2.5))
             istop = random.randrange(istart, int(width // 1.7))
             jstart = random.randrange(int(height // 2.5))
@@ -467,78 +463,78 @@ def effect_convolution_edge_dilation(img, patches=2):
             jstart = random.randrange(int(height // 11), int(height // 2.2))
             jstop = random.randrange(int(height // 1.8), int(height // 1.05))
         for i in range(istart, istop):
-            doAny = random.randrange(0, 4)
-            if doAny == 0:
+            do_any = random.randrange(0, 4)
+            if do_any == 0:
                 continue
             for j in range(jstart, jstop):
-                doAllChannels = random.randrange(0, 8)  # if 0, pick 1 channel, else do all channels; was 0,8
-                sumFxM = 0
-                sumFilters = random.randrange(5, 90)  # dilate result for underflow later
-                if doAllChannels == 0:
+                do_all_channels = random.randrange(0, 8)  # if 0, pick 1 channel, else do all channels; was 0,8
+                sum_FxM = 0
+                sum_filters = random.randrange(5, 90)  # dilate result for underflow later
+                if do_all_channels == 0:
                     c = random.randrange(0, 3)
-                    sumFxM += int((convoMatrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
-                    sumFxM += int((convoMatrix[0][1] * int(img[j][i - 1][c])))  # up1
-                    sumFxM += int((convoMatrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
-                    sumFxM += int((convoMatrix[1][0] * int(img[j - 1][i][c])))  # left1
-                    sumFxM += int((convoMatrix[1][1] * int(img[j][i][c])))  # center
-                    sumFxM += int((convoMatrix[1][2] * int(img[j + 1][i][c])))  # right1
-                    sumFxM += int((convoMatrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
-                    sumFxM += int((convoMatrix[2][1] * int(img[j][i + 1][c])))  # down1
-                    sumFxM += int((convoMatrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
-                    result = int((sumFxM / sumFilters))
+                    sum_FxM += int((convo_matrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
+                    sum_FxM += int((convo_matrix[0][1] * int(img[j][i - 1][c])))  # up1
+                    sum_FxM += int((convo_matrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
+                    sum_FxM += int((convo_matrix[1][0] * int(img[j - 1][i][c])))  # left1
+                    sum_FxM += int((convo_matrix[1][1] * int(img[j][i][c])))  # center
+                    sum_FxM += int((convo_matrix[1][2] * int(img[j + 1][i][c])))  # right1
+                    sum_FxM += int((convo_matrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
+                    sum_FxM += int((convo_matrix[2][1] * int(img[j][i + 1][c])))  # down1
+                    sum_FxM += int((convo_matrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
+                    result = int((sum_FxM / sum_filters))
                     # Trim the results above 0 -> reduce overall darkness
                     if result <= 0:
-                        newimg[j, i, c] = result
+                        new_img[j, i, c] = result
                 else:
                     for c in range(0, 3):
-                        sumFxM += int((convoMatrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
-                        sumFxM += int((convoMatrix[0][1] * int(img[j][i - 1][c])))  # up1
-                        sumFxM += int((convoMatrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
-                        sumFxM += int((convoMatrix[1][0] * int(img[j - 1][i][c])))  # left1
-                        sumFxM += int((convoMatrix[1][1] * int(img[j][i][c])))  # center
-                        sumFxM += int((convoMatrix[1][2] * int(img[j + 1][i][c])))  # right1
-                        sumFxM += int((convoMatrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
-                        sumFxM += int((convoMatrix[2][1] * int(img[j][i + 1][c])))  # down1
-                        sumFxM += int((convoMatrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
-                        result = int((sumFxM / sumFilters))
+                        sum_FxM += int((convo_matrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
+                        sum_FxM += int((convo_matrix[0][1] * int(img[j][i - 1][c])))  # up1
+                        sum_FxM += int((convo_matrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
+                        sum_FxM += int((convo_matrix[1][0] * int(img[j - 1][i][c])))  # left1
+                        sum_FxM += int((convo_matrix[1][1] * int(img[j][i][c])))  # center
+                        sum_FxM += int((convo_matrix[1][2] * int(img[j + 1][i][c])))  # right1
+                        sum_FxM += int((convo_matrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
+                        sum_FxM += int((convo_matrix[2][1] * int(img[j][i + 1][c])))  # down1
+                        sum_FxM += int((convo_matrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
+                        result = int((sum_FxM / sum_filters))
                         # Trim the results above 0 -> reduce overall darkness
                         if result <= 0:
-                            newimg[j, i, c] = result
-    return newimg
+                            new_img[j, i, c] = result
+    return new_img
 
 
 def effect_convolution_dynamic(img, patches=2):
     """
     Generate a different Convolution Kernel each time!
     :param img:
-    :return newimg:
+    :return new_img:
     """
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    convoMatrix = None  # init as null
-    randomEach = random.randrange(0, 5)
-    # If randomEach false, just generate kernel once!
-    if randomEach == 0:
-        convoMatrix = np.array([[random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
+    convo_matrix = None  # init as null
+    random_each = random.randrange(0, 5)
+    # If random_each false, just generate kernel once!
+    if random_each == 0:
+        convo_matrix = np.array([[random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
                                 [random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
                                 [random.randrange(-2, 3), random.randrange(-2, 3),
                                  random.randrange(-2, 3)]])  # DYNAMIC, -2->2
 
     for p in range(patches):
-        # If randomEach is true, generate convolution kernel EACH PATCH
-        if randomEach != 0:
-            convoMatrix = np.array([[random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
+        # If random_each is true, generate convolution kernel EACH PATCH
+        if random_each != 0:
+            convo_matrix = np.array([[random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
                                     [random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
                                     [random.randrange(-2, 3), random.randrange(-2, 3),
                                      random.randrange(-2, 3)]])  # DYNAMIC, -2->2
-        doAny = random.randrange(0, 4)  # randomly allow null patch
-        if doAny == 0:
+        do_any = random.randrange(0, 4)  # randomly allow null patch
+        if do_any == 0:
             continue
 
         # Determine whether to have patch size in orig. style, or new style
-        doStyle = random.randrange(0, 2)
-        if doStyle == 0:  # orig. window
+        do_style = random.randrange(0, 2)
+        if do_style == 0:  # orig. window
             istart = random.randrange(int(width // 3.5))
             istop = random.randrange(istart, int(width // 2.7))
             jstart = random.randrange(int(height // 3.5))
@@ -549,37 +545,37 @@ def effect_convolution_dynamic(img, patches=2):
             jstart = random.randrange(int(height // 11), int(height // 2.2))
             jstop = random.randrange(int(height // 1.8), int(height // 1.05))
         for i in range(istart, istop):
-            doAny = random.randrange(0, 4)  # randomly allow null patch
-            if (doAny == 0):
+            do_any = random.randrange(0, 4)  # randomly allow null patch
+            if (do_any == 0):
                 continue
             for j in range(jstart, jstop):
-                doAllChannels = random.randrange(0, 8)  # if 0, pick 1 channel, else do all channels; was 0,8
-                sumFxM = 0
-                sumFilters = random.randrange(1, 25)
-                if doAllChannels == 0:
+                do_all_channels = random.randrange(0, 8)  # if 0, pick 1 channel, else do all channels; was 0,8
+                sum_FxM = 0
+                sum_filters = random.randrange(1, 25)
+                if do_all_channels == 0:
                     c = random.randrange(0, 3)
-                    sumFxM += int((convoMatrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
-                    sumFxM += int((convoMatrix[0][1] * int(img[j][i - 1][c])))  # up1
-                    sumFxM += int((convoMatrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
-                    sumFxM += int((convoMatrix[1][0] * int(img[j - 1][i][c])))  # left1
-                    sumFxM += int((convoMatrix[1][1] * int(img[j][i][c])))  # center
-                    sumFxM += int((convoMatrix[1][2] * int(img[j + 1][i][c])))  # right1
-                    sumFxM += int((convoMatrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
-                    sumFxM += int((convoMatrix[2][1] * int(img[j][i + 1][c])))  # down1
-                    sumFxM += int((convoMatrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
-                    result = int((sumFxM / sumFilters))
-                    newimg[j, i, c] = result
+                    sum_FxM += int((convo_matrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
+                    sum_FxM += int((convo_matrix[0][1] * int(img[j][i - 1][c])))  # up1
+                    sum_FxM += int((convo_matrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
+                    sum_FxM += int((convo_matrix[1][0] * int(img[j - 1][i][c])))  # left1
+                    sum_FxM += int((convo_matrix[1][1] * int(img[j][i][c])))  # center
+                    sum_FxM += int((convo_matrix[1][2] * int(img[j + 1][i][c])))  # right1
+                    sum_FxM += int((convo_matrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
+                    sum_FxM += int((convo_matrix[2][1] * int(img[j][i + 1][c])))  # down1
+                    sum_FxM += int((convo_matrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
+                    result = int((sum_FxM / sum_filters))
+                    new_img[j, i, c] = result
                 else:
                     for c in range(0, 3):
-                        sumFxM += int((convoMatrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
-                        sumFxM += int((convoMatrix[0][1] * int(img[j][i - 1][c])))  # up1
-                        sumFxM += int((convoMatrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
-                        sumFxM += int((convoMatrix[1][0] * int(img[j - 1][i][c])))  # left1
-                        sumFxM += int((convoMatrix[1][1] * int(img[j][i][c])))  # center
-                        sumFxM += int((convoMatrix[1][2] * int(img[j + 1][i][c])))  # right1
-                        sumFxM += int((convoMatrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
-                        sumFxM += int((convoMatrix[2][1] * int(img[j][i + 1][c])))  # down1
-                        sumFxM += int((convoMatrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
-                        result = int((sumFxM / sumFilters))
-                        newimg[j, i, c] = result
-    return newimg
+                        sum_FxM += int((convo_matrix[0][0] * int(img[j - 1][i - 1][c])))  # up1, left1
+                        sum_FxM += int((convo_matrix[0][1] * int(img[j][i - 1][c])))  # up1
+                        sum_FxM += int((convo_matrix[0][2] * int(img[j + 1][i - 1][c])))  # up1, right1
+                        sum_FxM += int((convo_matrix[1][0] * int(img[j - 1][i][c])))  # left1
+                        sum_FxM += int((convo_matrix[1][1] * int(img[j][i][c])))  # center
+                        sum_FxM += int((convo_matrix[1][2] * int(img[j + 1][i][c])))  # right1
+                        sum_FxM += int((convo_matrix[2][0] * int(img[j - 1][i + 1][c])))  # down1, left1
+                        sum_FxM += int((convo_matrix[2][1] * int(img[j][i + 1][c])))  # down1
+                        sum_FxM += int((convo_matrix[2][2] * int(img[j + 1][i + 1][c])))  # down1, right1
+                        result = int((sum_FxM / sum_filters))
+                        new_img[j, i, c] = result
+    return new_img
