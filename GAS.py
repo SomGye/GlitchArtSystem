@@ -1,17 +1,21 @@
 import random
+from os import path
+from pathlib import Path
 import sys
-# import os
+from datetime import date
+
 import numpy as np
 import cv2
 
-import GAS_Effects as GAS
+from filters import color_filters, location_filters, complex_filters
+from functions import path_validator
 
 #   Author: Maxwell Crawford
-#   CSC475 Final: Glitch Art Generator --> GlitchArtSystem
-#   8-1-18
-#   2018 vers. 3a - refactor and add command-line support
+#   GlitchArtSystem
+#   2020 v2 - Refactor to PEP8 std., modular design
 
-## BEGIN CALLS/SETUP
+DEBUG = False
+
 if __name__ == "__main__":
     """Main program entry point for GAS.
     Raises:
@@ -19,39 +23,44 @@ if __name__ == "__main__":
     Returns:
         None
     """
+    print("*~~~ Welcome to GlitchArtSystem! ~~~*\n")
+    # Check Debug Flag - Disable Traceback for Release
+    if not DEBUG:
+        sys.tracebacklimit = 0
+    else:
+        print('### DEBUG MODE ###')
 
     # Grab any command-line args...
     script_args_len = len(sys.argv)
-    # script_args = str(sys.argv)
-    use_arg = False # default
+    use_arg = False  # default
 
     # Setup Random Call List for effects order
-    supported_effects = 15 #currently supported effects...
+    supported_effects = 15  # currently supported effects...
     layers_num = random.randrange(5, 26)
     current_effects = []
     print("* Generating Random Order of Effects...")
     for e in range(layers_num):
         # Generate effect layer #:
-        effect = random.randrange(1, supported_effects+1)
-        current_effects.append(effect) #add resulting effect to list
+        current_effect = random.randrange(1, supported_effects + 1)
+        current_effects.append(current_effect)  # add resulting effect to list
 
-    #Generate random list from chosen effects,
+    # Generate random list from chosen effects,
     # ensuring two conditions:
     randlist = []
     for e in range(len(current_effects)):
         choice = random.choice(current_effects)
-        #1) Prevent CopyOver (10) from being 1st effect!
-        if (e == 0):
+        # 1) Prevent CopyOver (10) from being 1st effect!
+        if e == 0:
             while True:
-                if (choice == 10):
+                if choice == 10:
                     choice = random.randrange(1, supported_effects + 1)
                     continue
                 else:
                     break
         else:
-            #2) If effect is same as last one, try again:
+            # 2) If effect is same as last one, try again:
             while True:
-                if (choice == randlist[-1]):
+                if choice == randlist[-1]:
                     choice = random.randrange(1, supported_effects + 1)
                     continue
                 else:
@@ -59,102 +68,116 @@ if __name__ == "__main__":
         randlist.append(choice)  # non-unique choices after conditions
 
     # Check if Command-Line args were given:
+    dragged_path = ''
     if script_args_len > 1:
         use_arg = True
+    else:
+        # Check user input with drag-n-drop:
+        dragged_path = input("Drag your file here -->\t")
 
-    # Check user input with drag-n-drop:
-    dragged_name = input("Drag your file here -->\t")
-    
     # Load Images
     # 1) Check sys arg for user-defined image
-    # 2) Check test.png (in images folder or not)
-    # 3) Check test.jpg (in images folder or not)
+    # 2) Check dragged path
+    # 3) Check test path
     # 4) Else, raise error.
-    img1 = None
+    file_path = ''
+    test_path = 'test.jpg'
+    src_img = None
+    src_img_grayscale = None
+    file_valid = False
     print("* Loading initial image...")
     if use_arg:
-        # if os.path.exists()
-        try:
-            img1 = cv2.imread(str(sys.argv[1]))
-        except:
-            use_arg = False # break
-    else:
-        img1 = cv2.imread(dragged_name)
-        img1_g = cv2.imread(dragged_name, 0)
-        if img1 is None:
-            img1 = cv2.imread("images/test.png")
-            img1_g = cv2.imread("images/test.png", 0)
-        if img1 is None:
-            img1 = cv2.imread("images/test.jpg")
-            img1_g = cv2.imread("images/test.jpg", 0)
-        if img1 is None:
-            img1 = cv2.imread("test.png")
-            img1_g = cv2.imread("test.png", 0)
-        if img1 is None:
-            img1 = cv2.imread("test.jpg")
-            img1_g = cv2.imread("test.jpg", 0)
-        if img1 is None:
+        file_path = str(sys.argv[1])
+        src_img = cv2.imread(file_path)
+        src_img_grayscale = cv2.imread(file_path, 0)
+
+    # Check that path exists and is a file:
+    if path.exists(file_path) and path.isfile(file_path):
+        file_valid = True
+    if not file_valid:
+        # Check validity of dragged_path
+        # TODO: Fix dragged path validity bug with stored wallpapers
+        # print("Dragged path is: {}\nPath exists: {}\nIs File: {}".format(
+        #       dragged_path,
+        #       str(path.exists(dragged_path)),
+        #       str(path.isfile(dragged_path))))
+        is_valid = path_validator.is_pathname_valid(Path(dragged_path))
+        if path.exists(dragged_path) and path.isfile(dragged_path):
+            # Try to use drag input file
+            src_img = cv2.imread(dragged_path)
+            src_img_grayscale = cv2.imread(dragged_path, 0)  # no color
+        elif path.exists(test_path) and path.isfile(test_path):
+            # Fallback options
+            print('... Using fallback test image ...')
+            src_img = cv2.imread(test_path)
+            src_img_grayscale = cv2.imread(test_path, 0)
+        else:
+            # All Else Failed!
             raise TypeError('No valid image found or specified.\n')
 
-    # Perform Functions
-    def effectCaller2(img, effect):
-        '''
+
+    def effect_caller(img, effect):
+        """
         Calls the effect functions and displays basic info.
         This takes a copy of the existing layered image and
         returns an image with a new effect layer applied.
-        :param img: image to use
-        :param effects_order: uses randlist to determine order of effects used
-        :return newimg:
-        '''
-        newimg = np.copy(img)
-        newimg_g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        if effect == 1: #call 1st effect
+        :param img: source image (a NumPy array copy of a CV2 read file)
+        :param effect: specific effect filter function num.
+        :return new_img:
+        """
+        try:
+            new_img = np.copy(img)
+            new_img_g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        except TypeError:
+            raise TypeError('\nInvalid Image Matrix Detected - Try another file.')
+        if effect == 1:  # call 1st effect
             print("-- Effect: Random Pixel Shift")
-            newimg = GAS.effectRandomPixelShift(img)
+            new_img = location_filters.effect_random_pixel_shift(img)
         elif effect == 2:
             print("-- Effect: Color Smear")
-            newimg = GAS.effectColorSmear(img)
+            new_img = color_filters.effect_color_smear(img)
         elif effect == 3:
             print("-- Effect: Color Scratch")
-            scratchdir = random.randrange(0, 2)
-            newimg = GAS.effectColorScratch(img, 0, 0, 4, scratchdir)
+            scratch_dir = random.randrange(0, 2)
+            new_img = color_filters.effect_color_scratch(img, 0, 0, 4, scratch_dir)
         elif effect == 4:
             print("-- Effect: SoundWave")
-            newimg = GAS.effectSoundWave(img)
+            new_img = complex_filters.effect_soundwave(img)
         elif effect == 5:
             print("-- Effect: Static")
-            newimg = GAS.effectStatic(img)
+            new_img = complex_filters.effect_static(img)
         elif effect == 6:
             print("-- Effect: Scanlines")
-            newimg = GAS.effectScanlines(img)
+            new_img = complex_filters.effect_scanlines(img)
         elif effect == 7:
             print("-- Effect: Horiz. Shift")
-            newimg = GAS.effectHorizShift(img)
+            new_img = location_filters.effect_horiz_shift(img)
         elif effect == 8:
             print("-- Effect: Color Compression Bands")
-            newimg = GAS.effectColorCompression(img)
+            new_img = color_filters.effect_color_compression(img)
         elif effect == 9:
             print("-- Effect: Harris Color Shift")
-            newimg = GAS.effectHarrisEdgeColorShift(img, newimg_g)
+            new_img = color_filters.effect_harris_edge_color_shift(img, new_img_g)
         elif effect == 10:
             print("-- Effect: Copy Over (Original Vers.)")
-            newimg = GAS.copyOver(img, img1)
+            new_img = complex_filters.effect_copy_over(img, src_img)
         elif effect == 11:
             print("-- Effect: Convolution Edge Lines")
-            newimg = GAS.effectConvolutionEdgeLines(img)
+            new_img = color_filters.effect_convolution_edge_lines(img)
         elif effect == 12:
             print("-- Effect: Convolution Edge Dilation")
-            newimg = GAS.effectConvolutionEdgeDilation(img)
+            new_img = color_filters.effect_convolution_edge_dilation(img)
         elif effect == 13:
             print("-- Effect: Convolution Dynamics")
-            newimg = GAS.effectConvolutionDynamic(img)
+            new_img = color_filters.effect_convolution_dynamic(img)
         elif effect == 14:
             print("-- Effect: Cross Hatch")
-            newimg = GAS.effectCrossHatch(img)
+            new_img = complex_filters.effect_cross_hatch(img)
         elif effect == 15:
             print("-- Effect: Copy Over (Color Distort)")
-            newimg = GAS.copyOverColorDistort(img, img1)
-        return newimg
+            new_img = complex_filters.effect_copy_over_color_distort(img, src_img)
+        return new_img
+
 
     # Seed the random library
     random.seed()
@@ -163,32 +186,35 @@ if __name__ == "__main__":
     file_hash = ''
     hash_list = [
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-        'a', 'b', 'c', 'd', 'e', 'f',
-        'A', 'B', 'C', 'D', 'E', 'F'
-        ]
-    hash_length = 10
+        'a', 'b', 'c', 'd', 'e', 'f', 'h', 'i', 'j', 'k',
+        'A', 'B', 'C', 'D', 'E', 'F', 'H', 'I', 'J', 'K'
+    ]
+    hash_length = 12
     for h in range(hash_length):
         current_hash_num = random.randrange(0, len(hash_list))
         current_hash_item = hash_list[current_hash_num]
         file_hash += current_hash_item
-    
-    # Compose resulting filename:
+
+    # Compose resulting filename from hash plus ISO date:
+    today = str(date.today())
     result_file_path = "results/resulttest_"
-    result_file_path += file_hash 
+    result_file_path += file_hash
+    result_file_path += '_' + today
     result_file_path += ".png"
-    ## END SETUP
 
     # Display Results
     large = 1600
-    result = np.copy(img1)
+    result = np.copy(src_img)
     for e in range(len(randlist)):
-        print("\n* Performing Effect Layer #" + str(e+1) + " / " + str(layers_num))
-        result = effectCaller2(result, randlist[e])
-    # cv2.imwrite("results/resulttest.png", result, [cv2.IMWRITE_PNG_COMPRESSION,0]) #note the PNG, lowest compression!
-    cv2.imwrite(result_file_path, result, \
-        [cv2.IMWRITE_PNG_COMPRESSION, 0]) #note the PNG, lowest compression!
-    cv2.imshow("Original Image", img1)
-    if img1.shape[0] > large: #If image is 'large', then resize for convenience
-        result = cv2.resize(result, (int(0.5*result.shape[1]), int(0.5*result.shape[0])), interpolation=cv2.INTER_AREA)
-    cv2.imshow("Effect Caller2 Result", result)
+        print("\n* Performing Effect Layer #" + str(e + 1) + " / " + str(layers_num))
+        result = effect_caller(result, randlist[e])
+    cv2.imwrite(result_file_path, result,
+                [cv2.IMWRITE_PNG_COMPRESSION, 0])  # note the PNG, lowest compression!
+    cv2.imshow("Original Image", src_img)
+
+    # Scale preview output image down for convenience
+    if src_img.shape[0] > large:
+        result = cv2.resize(result, (int(0.5 * result.shape[1]), int(0.5 * result.shape[0])),
+                            interpolation=cv2.INTER_AREA)
+    cv2.imshow("Glitch Art Result", result)
     cv2.waitKey(0)
