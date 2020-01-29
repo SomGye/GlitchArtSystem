@@ -15,44 +15,44 @@ def effect_soundwave(img, colorshift=25):
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    halfheight = int(height // 2)
-    newimg = np.copy(img)
+    half_height = int(height // 2)
+    new_img = np.copy(img)
 
     # Choose init wave params
-    updown = random.randrange(0, 2)
-    upamt = random.randrange(10, int(halfheight // 1.2))
-    downamt = random.randrange(10, int(halfheight // 1.2))
-    rightamt = random.randrange(1, 11)
+    vert_selector = random.randrange(0, 2)
+    up_amt = random.randrange(10, int(half_height // 1.2))
+    down_amt = random.randrange(10, int(half_height // 1.2))
+    right_amt = random.randrange(1, 11)
     for i in range(width):
-        if i % rightamt == 0:  # switch dir
+        if i % right_amt == 0:  # switch dir
             # Reinit. wave params
-            updown = random.randrange(0, 2)
-            upamt = random.randrange(10, int(halfheight // 1.2))
-            downamt = random.randrange(10, int(halfheight // 1.2))
-            rightamt = random.randrange(1, 11)
-        if updown == 0:  # go up
-            for j in range(halfheight, halfheight - upamt, -1):
+            vert_selector = random.randrange(0, 2)
+            up_amt = random.randrange(10, int(half_height // 1.2))
+            down_amt = random.randrange(10, int(half_height // 1.2))
+            right_amt = random.randrange(1, 11)
+        if vert_selector == 0:  # go up
+            for j in range(half_height, half_height - up_amt, -1):
                 # Randomize color
                 newb = img[j][i][0] + (random.randrange(-colorshift, colorshift))
                 newg = img[j][i][1] + (random.randrange(-colorshift, colorshift))
                 newr = img[j][i][2] + (random.randrange(-colorshift, colorshift))
                 # Apply color
-                newimg[j][i][0] = newb
-                newimg[j][i][1] = newg
-                newimg[j][i][2] = newr
-        elif updown == 1:  # go down
-            for j in range(halfheight, halfheight + downamt):
+                new_img[j][i][0] = newb
+                new_img[j][i][1] = newg
+                new_img[j][i][2] = newr
+        elif vert_selector == 1:  # go down
+            for j in range(half_height, half_height + down_amt):
                 # Randomize color
                 newb = img[j][i][0] + (random.randrange(-colorshift, colorshift))
                 newg = img[j][i][1] + (random.randrange(-colorshift, colorshift))
                 newr = img[j][i][2] + (random.randrange(-colorshift, colorshift))
                 # Apply color
-                newimg[j][i][0] = newb
-                newimg[j][i][1] = newg
-                newimg[j][i][2] = newr
+                new_img[j][i][0] = newb
+                new_img[j][i][1] = newg
+                new_img[j][i][2] = newr
 
         # for j in range(height):
-    return newimg
+    return new_img
 
 
 def effect_static(img):
@@ -61,12 +61,12 @@ def effect_static(img):
     Loop 1: cover whole image with semi-uniform specks of random color
     Loop 2: choose random spots and fill those in too
     :param img:
-    :return newimg:
+    :return new_img:
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    newimg = np.copy(img)
-    maxcolor = 255
+    new_img = np.copy(img)
+    max_color = 255
 
     # Loop 1
     for i in range(width):
@@ -81,48 +81,48 @@ def effect_static(img):
         for j in range(height):
             if ((i % spacingi) == 0) and ((j % spacingj) == 0):
                 # if (i % spacingi == 0): #solid vert. lines
-                useColor = random.randrange(0, 4)
-                if useColor == 0:
-                    newimg[j, i, 0] = img[j, i, 0] // 3
-                    newimg[j, i, 1] = img[j, i, 1] // 3
-                    newimg[j, i, 2] = img[j, i, 2] // 3
+                use_color = random.randrange(0, 4)
+                if use_color == 0:
+                    new_img[j, i, 0] = img[j, i, 0] // 3
+                    new_img[j, i, 1] = img[j, i, 1] // 3
+                    new_img[j, i, 2] = img[j, i, 2] // 3
                 else:
-                    spotcolor = random.randrange(int(maxcolor // 7), int(maxcolor // 1.5))  # roughly 42->159
-                    newimg[j, i, 0] = spotcolor
-                    newimg[j, i, 1] = spotcolor
-                    newimg[j, i, 2] = spotcolor
+                    spot_color = random.randrange(int(max_color // 7), int(max_color // 1.5))  # roughly 42->159
+                    new_img[j, i, 0] = spot_color
+                    new_img[j, i, 1] = spot_color
+                    new_img[j, i, 2] = spot_color
     # Loop 2
-    randomspots = random.randrange(90, 180)
-    for r in range(randomspots):
-        useSquare = random.randrange(0, 3)  # 0=regular, 1-2=use square patch
+    random_spots = random.randrange(90, 180)
+    for r in range(random_spots):
+        use_square = random.randrange(0, 3)  # 0=regular, 1-2=use square patch
         randj = random.randrange(5, height - 5)
         randi = random.randrange(5, width - 5)
-        spotcolor = random.randrange(int(maxcolor // 7), int(maxcolor // 1.5))  # roughly 42->159
-        if useSquare == 0:
-            newimg[randj, randi, 0] = spotcolor
-            newimg[randj, randi, 1] = spotcolor
-            newimg[randj, randi, 2] = spotcolor
+        spot_color = random.randrange(int(max_color // 7), int(max_color // 1.5))  # roughly 42->159
+        if use_square == 0:
+            new_img[randj, randi, 0] = spot_color
+            new_img[randj, randi, 1] = spot_color
+            new_img[randj, randi, 2] = spot_color
         else:
-            newimg[randj, randi, 0] = spotcolor
-            newimg[randj, randi, 1] = spotcolor
-            newimg[randj, randi, 2] = spotcolor
+            new_img[randj, randi, 0] = spot_color
+            new_img[randj, randi, 1] = spot_color
+            new_img[randj, randi, 2] = spot_color
 
-            newimg[randj - 1, randi - 1, 0] = spotcolor
-            newimg[randj - 1, randi - 1, 1] = spotcolor
-            newimg[randj - 1, randi - 1, 2] = spotcolor
+            new_img[randj - 1, randi - 1, 0] = spot_color
+            new_img[randj - 1, randi - 1, 1] = spot_color
+            new_img[randj - 1, randi - 1, 2] = spot_color
 
-            newimg[randj + 1, randi + 1, 0] = spotcolor
-            newimg[randj + 1, randi + 1, 1] = spotcolor
-            newimg[randj + 1, randi + 1, 2] = spotcolor
+            new_img[randj + 1, randi + 1, 0] = spot_color
+            new_img[randj + 1, randi + 1, 1] = spot_color
+            new_img[randj + 1, randi + 1, 2] = spot_color
 
-            newimg[randj - 1, randi + 1, 0] = spotcolor
-            newimg[randj - 1, randi + 1, 1] = spotcolor
-            newimg[randj - 1, randi + 1, 2] = spotcolor
+            new_img[randj - 1, randi + 1, 0] = spot_color
+            new_img[randj - 1, randi + 1, 1] = spot_color
+            new_img[randj - 1, randi + 1, 2] = spot_color
 
-            newimg[randj + 1, randi - 1, 0] = spotcolor
-            newimg[randj + 1, randi - 1, 1] = spotcolor
-            newimg[randj + 1, randi - 1, 2] = spotcolor
-    return newimg
+            new_img[randj + 1, randi - 1, 0] = spot_color
+            new_img[randj + 1, randi - 1, 1] = spot_color
+            new_img[randj + 1, randi - 1, 2] = spot_color
+    return new_img
 
 
 def effect_scanlines(img, lines=5):
@@ -130,12 +130,12 @@ def effect_scanlines(img, lines=5):
     Scanlines effect: horizontal lines of solid grayscale static,
     with bursts of color
     :param img:
-    :return newimg:
+    :return new_img:
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    newimg = np.copy(img)
-    maxcolor = 255
+    new_img = np.copy(img)
+    max_color = 255
     if lines <= 5:
         lines = random.randrange(5, 25)
     for l in range(lines):
@@ -144,49 +144,49 @@ def effect_scanlines(img, lines=5):
             spacingj = random.randrange(int(height // 12), int(height // 1.2))
             for j in range(height):
                 if (j % spacingj) == 0:
-                    useColor = random.randrange(0, 4)  # determine if g.s. or not
-                    useThickLine = random.randrange(0, 4)  # determine if thicker or not
-                    if useColor == 0:
+                    use_color = random.randrange(0, 4)  # determine if g.s. or not
+                    use_thick_line = random.randrange(0, 4)  # determine if thicker or not
+                    if use_color == 0:
                         # Copy initial color:
                         colorvalb = img[randomj, i, 0]
                         colorvalg = img[randomj, i, 1]
                         colorvalr = img[randomj, i, 2]
                         # Determine dominant color and half others:
-                        colormax = max([colorvalb, colorvalg, colorvalr])
-                        if colormax == colorvalb:
-                            newimg[randomj, i, 0] = colorvalb
-                            newimg[randomj, i, 1] = colorvalg // 2
-                            newimg[randomj, i, 2] = colorvalr // 2
-                            if useThickLine != 0:
-                                newimg[randomj + 1, i, 0] = colorvalb
-                                newimg[randomj + 1, i, 1] = colorvalg // 2
-                                newimg[randomj + 1, i, 2] = colorvalr // 2
-                        elif colormax == colorvalg:
-                            newimg[randomj, i, 0] = colorvalb // 2
-                            newimg[randomj, i, 1] = colorvalg
-                            newimg[randomj, i, 2] = colorvalr // 2
-                            if useThickLine != 0:
-                                newimg[randomj + 1, i, 0] = colorvalb // 2
-                                newimg[randomj + 1, i, 1] = colorvalg
-                                newimg[randomj + 1, i, 2] = colorvalr // 2
-                        elif colormax == colorvalr:
-                            newimg[randomj, i, 0] = colorvalb // 2
-                            newimg[randomj, i, 1] = colorvalg // 2
-                            newimg[randomj, i, 2] = colorvalr
-                            if useThickLine != 0:
-                                newimg[randomj + 1, i, 0] = colorvalb // 2
-                                newimg[randomj + 1, i, 1] = colorvalg // 2
-                                newimg[randomj + 1, i, 2] = colorvalr
+                        color_max = max([colorvalb, colorvalg, colorvalr])
+                        if color_max == colorvalb:
+                            new_img[randomj, i, 0] = colorvalb
+                            new_img[randomj, i, 1] = colorvalg // 2
+                            new_img[randomj, i, 2] = colorvalr // 2
+                            if use_thick_line != 0:
+                                new_img[randomj + 1, i, 0] = colorvalb
+                                new_img[randomj + 1, i, 1] = colorvalg // 2
+                                new_img[randomj + 1, i, 2] = colorvalr // 2
+                        elif color_max == colorvalg:
+                            new_img[randomj, i, 0] = colorvalb // 2
+                            new_img[randomj, i, 1] = colorvalg
+                            new_img[randomj, i, 2] = colorvalr // 2
+                            if use_thick_line != 0:
+                                new_img[randomj + 1, i, 0] = colorvalb // 2
+                                new_img[randomj + 1, i, 1] = colorvalg
+                                new_img[randomj + 1, i, 2] = colorvalr // 2
+                        elif color_max == colorvalr:
+                            new_img[randomj, i, 0] = colorvalb // 2
+                            new_img[randomj, i, 1] = colorvalg // 2
+                            new_img[randomj, i, 2] = colorvalr
+                            if use_thick_line != 0:
+                                new_img[randomj + 1, i, 0] = colorvalb // 2
+                                new_img[randomj + 1, i, 1] = colorvalg // 2
+                                new_img[randomj + 1, i, 2] = colorvalr
                     else:
-                        spotcolor = random.randrange(int(maxcolor // 6), int(maxcolor // 1.6))  # roughly 42->159
-                        newimg[randomj, i, 0] = spotcolor  # was j,i
-                        newimg[randomj, i, 1] = spotcolor
-                        newimg[randomj, i, 2] = spotcolor
-                        if useThickLine != 0:
-                            newimg[randomj + 1, i, 0] = spotcolor  # was j,i
-                            newimg[randomj + 1, i, 1] = spotcolor
-                            newimg[randomj + 1, i, 2] = spotcolor
-    return newimg
+                        spot_color = random.randrange(int(max_color // 6), int(max_color // 1.6))  # roughly 42->159
+                        new_img[randomj, i, 0] = spot_color  # was j,i
+                        new_img[randomj, i, 1] = spot_color
+                        new_img[randomj, i, 2] = spot_color
+                        if use_thick_line != 0:
+                            new_img[randomj + 1, i, 0] = spot_color  # was j,i
+                            new_img[randomj + 1, i, 1] = spot_color
+                            new_img[randomj + 1, i, 2] = spot_color
+    return new_img
 
 
 def effect_copy_over(img, orig_img, option=0):
@@ -205,9 +205,9 @@ def effect_copy_over(img, orig_img, option=0):
     :param img:
     :param orig_img:
     :param option:
-    :return newimg:
+    :return new_img:
     """
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
 
@@ -217,128 +217,128 @@ def effect_copy_over(img, orig_img, option=0):
     if option == 1:  # top half
         for i in range(width):
             for j in range(height // 2):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 2:  # bottom half
         for i in range(width):
             for j in range(height // 2, height):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 3:  # left half
         for i in range(width // 2):
             for j in range(height):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 4:  # right half
         for i in range(width // 2, width):
             for j in range(height):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 5:  # top left
         for i in range(width // 2):
             for j in range(height // 2):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 6:  # top right
         for i in range(width // 2, width):
             for j in range(height // 2):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 7:  # bottom left
         for i in range(width // 2):
             for j in range(height // 2, height):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 8:  # bottom right
         for i in range(width // 2, width):
             for j in range(height // 2, height):
-                newimg[j, i, 0] = orig_img[j, i, 0]
-                newimg[j, i, 1] = orig_img[j, i, 1]
-                newimg[j, i, 2] = orig_img[j, i, 2]
-    return newimg
+                new_img[j, i, 0] = orig_img[j, i, 0]
+                new_img[j, i, 1] = orig_img[j, i, 1]
+                new_img[j, i, 2] = orig_img[j, i, 2]
+    return new_img
 
 
-def effect_cross_hatch(img, randomspots=150):
+def effect_cross_hatch(img, random_spots=150):
     """
     Random hatch spots in variable X patterns.
     Similar to static.
     :param img:
-    :param randomspots:
-    :return newimg:
+    :param random_spots:
+    :return new_img:
     """
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
-    newimg = np.copy(img)
-    maxcolor = 255
+    new_img = np.copy(img)
+    max_color = 255
 
     # Loop
-    if randomspots == 150:
-        randomspots = random.randrange(150, 301)
-    for r in range(randomspots):
+    if random_spots == 150:
+        random_spots = random.randrange(150, 301)
+    for r in range(random_spots):
         randj = random.randrange(10, height - 10)
         randi = random.randrange(10, width - 10)
-        spotcolor = random.randrange(int(maxcolor // 8), int(maxcolor // 1.2))
+        spot_color = random.randrange(int(max_color // 8), int(max_color // 1.2))
 
-        newimg[randj, randi, 0] = spotcolor
-        newimg[randj, randi, 1] = spotcolor
-        newimg[randj, randi, 2] = spotcolor
+        new_img[randj, randi, 0] = spot_color
+        new_img[randj, randi, 1] = spot_color
+        new_img[randj, randi, 2] = spot_color
         # Begin series of 8 dots for Cross pattern,
         # with each spot being optional for variation
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj - 1, randi - 1, 0] = spotcolor
-            newimg[randj - 1, randi - 1, 1] = spotcolor
-            newimg[randj - 1, randi - 1, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj - 1, randi - 1, 0] = spot_color
+            new_img[randj - 1, randi - 1, 1] = spot_color
+            new_img[randj - 1, randi - 1, 2] = spot_color
 
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj + 1, randi + 1, 0] = spotcolor
-            newimg[randj + 1, randi + 1, 1] = spotcolor
-            newimg[randj + 1, randi + 1, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj + 1, randi + 1, 0] = spot_color
+            new_img[randj + 1, randi + 1, 1] = spot_color
+            new_img[randj + 1, randi + 1, 2] = spot_color
 
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj - 1, randi + 1, 0] = spotcolor
-            newimg[randj - 1, randi + 1, 1] = spotcolor
-            newimg[randj - 1, randi + 1, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj - 1, randi + 1, 0] = spot_color
+            new_img[randj - 1, randi + 1, 1] = spot_color
+            new_img[randj - 1, randi + 1, 2] = spot_color
 
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj + 1, randi - 1, 0] = spotcolor
-            newimg[randj + 1, randi - 1, 1] = spotcolor
-            newimg[randj + 1, randi - 1, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj + 1, randi - 1, 0] = spot_color
+            new_img[randj + 1, randi - 1, 1] = spot_color
+            new_img[randj + 1, randi - 1, 2] = spot_color
         # --
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj - 3, randi - 3, 0] = spotcolor
-            newimg[randj - 3, randi - 3, 1] = spotcolor
-            newimg[randj - 3, randi - 3, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj - 3, randi - 3, 0] = spot_color
+            new_img[randj - 3, randi - 3, 1] = spot_color
+            new_img[randj - 3, randi - 3, 2] = spot_color
 
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj + 3, randi + 3, 0] = spotcolor
-            newimg[randj + 3, randi + 3, 1] = spotcolor
-            newimg[randj + 3, randi + 3, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj + 3, randi + 3, 0] = spot_color
+            new_img[randj + 3, randi + 3, 1] = spot_color
+            new_img[randj + 3, randi + 3, 2] = spot_color
 
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj - 3, randi + 3, 0] = spotcolor
-            newimg[randj - 3, randi + 3, 1] = spotcolor
-            newimg[randj - 3, randi + 3, 2] = spotcolor
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj - 3, randi + 3, 0] = spot_color
+            new_img[randj - 3, randi + 3, 1] = spot_color
+            new_img[randj - 3, randi + 3, 2] = spot_color
 
-        doSpot = random.randrange(0, 3)
-        if doSpot != 0:
-            newimg[randj + 3, randi - 3, 0] = spotcolor
-            newimg[randj + 3, randi - 3, 1] = spotcolor
-            newimg[randj + 3, randi - 3, 2] = spotcolor
-    return newimg
+        do_spot = random.randrange(0, 3)
+        if do_spot != 0:
+            new_img[randj + 3, randi - 3, 0] = spot_color
+            new_img[randj + 3, randi - 3, 1] = spot_color
+            new_img[randj + 3, randi - 3, 2] = spot_color
+    return new_img
 
 
 def effect_copy_over_color_distort(img, orig_img, option=0):
@@ -359,9 +359,9 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     :param img:
     :param orig_img:
     :param option:
-    :return newimg:
+    :return new_img:
     """
-    newimg = np.copy(img)
+    new_img = np.copy(img)
     height = img.shape[0]  # j, patchy
     width = img.shape[1]  # i, patchx
 
@@ -375,20 +375,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[0, i, 1]
             colorvalr = img[0, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height // 2):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 2:  # bottom half
         for i in range(width):
             # Copy initial color:
@@ -396,20 +396,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[height // 2, i, 1]
             colorvalr = img[height // 2, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height // 2, height):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 3:  # left half
         for i in range(width // 2):
             # Copy initial color:
@@ -417,20 +417,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[0, i, 1]
             colorvalr = img[0, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 4:  # right half
         for i in range(width // 2, width):
             # Copy initial color:
@@ -438,20 +438,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[0, i, 1]
             colorvalr = img[0, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 5:  # top left
         for i in range(width // 2):
             # Copy initial color:
@@ -459,20 +459,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[0, i, 1]
             colorvalr = img[0, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height // 2):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 6:  # top right
         for i in range(width // 2, width):
             # Copy initial color:
@@ -480,20 +480,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[0, i, 1]
             colorvalr = img[0, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height // 2):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 7:  # bottom left
         for i in range(width // 2):
             # Copy initial color:
@@ -501,20 +501,20 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[height // 2, i, 1]
             colorvalr = img[height // 2, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height // 2, height):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
     elif option == 8:  # bottom right
         for i in range(width // 2, width):
             # Copy initial color:
@@ -522,18 +522,18 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
             colorvalg = img[height // 2, i, 1]
             colorvalr = img[height // 2, i, 2]
             # Determine dominant color and half others:
-            colormax = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([colorvalb, colorvalg, colorvalr])
             for j in range(height // 2, height):
-                if colormax == colorvalb:
-                    newimg[j, i, 0] = orig_img[j, i, 0]
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2] // 2
-                elif colormax == colorvalg:
-                    newimg[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
-                    newimg[j, i, 1] = orig_img[j, i, 1]
-                    newimg[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
+                if color_max == colorvalb:
+                    new_img[j, i, 0] = orig_img[j, i, 0]
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2] // 2
+                elif color_max == colorvalg:
+                    new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
+                    new_img[j, i, 1] = orig_img[j, i, 1]
+                    new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
                 else:
-                    newimg[j, i, 0] = orig_img[j, i, 0] // 2
-                    newimg[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
-                    newimg[j, i, 2] = orig_img[j, i, 2]
-    return newimg
+                    new_img[j, i, 0] = orig_img[j, i, 0] // 2
+                    new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
+                    new_img[j, i, 2] = orig_img[j, i, 2]
+    return new_img
