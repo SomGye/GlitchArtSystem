@@ -1,11 +1,14 @@
 import random
 from os import path
+from pathlib import Path
 import sys
 from datetime import date
+
 import numpy as np
 import cv2
 
 from filters import color_filters, location_filters, complex_filters
+from functions import path_validator
 
 #   Author: Maxwell Crawford
 #   GlitchArtSystem
@@ -66,7 +69,7 @@ if __name__ == "__main__":
         randlist.append(choice)  # non-unique choices after conditions
 
     # Check if Command-Line args were given:
-    dragged_path = None
+    dragged_path = ''
     if script_args_len > 1:
         use_arg = True
     else:
@@ -94,12 +97,19 @@ if __name__ == "__main__":
         file_valid = True
     if not file_valid:
         # Check validity of dragged_path
+        # TODO: Fix dragged path validity bug with stored wallpapers
+        # print("Dragged path is: {}\nPath exists: {}\nIs File: {}".format(
+        #       dragged_path,
+        #       str(path.exists(dragged_path)),
+        #       str(path.isfile(dragged_path))))
+        is_valid = path_validator.is_pathname_valid(Path(dragged_path))
         if path.exists(dragged_path) and path.isfile(dragged_path):
             # Try to use drag input file
             src_img = cv2.imread(dragged_path)
             src_img_grayscale = cv2.imread(dragged_path, 0)  # no color
         elif path.exists(test_path) and path.isfile(test_path):
             # Fallback options
+            print('... Using fallback test image ...')
             src_img = cv2.imread(test_path)
             src_img_grayscale = cv2.imread(test_path, 0)
         else:
