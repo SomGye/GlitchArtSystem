@@ -12,10 +12,9 @@ from functions import path_validator
 
 #   Author: Maxwell Crawford
 #   GlitchArtSystem
-#   2020-01-22
 #   2020 v2 - Refactor to PEP8 std., modular design
 
-DEBUG = True
+DEBUG = False
 
 if __name__ == "__main__":
     """Main program entry point for GAS.
