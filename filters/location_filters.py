@@ -2,26 +2,26 @@ import numpy as np
 import random
 
 
-def effect_random_pixel_shift(img, offset_range=100, patchx=0, patchy=0, patches=4):
+def effect_random_pixel_shift(img, offset_range=100, patch_x=0, patch_y=0, patches=4):
     """
-    Leave patchx, patchy at 0 to randomize!
+    Leave patch_x, patch_y at 0 to randomize!
     :param img:
     :param offset_range: max amount it can be shifted
     :return new_img:
     """
     new_img = np.copy(img)
-    height = img.shape[0]  # j, patchy
-    width = img.shape[1]  # i, patchx
+    height = img.shape[0]  # j, patch_y
+    width = img.shape[1]  # i, patch_x
     # current_offset = 0
     min_patches = 4
-    patchx_random = False
-    patchy_random = False
+    patch_x_random = False
+    patch_y_random = False
 
     # If patch sizes are left a 0, randomize!
-    if patchx == 0:
-        patchx_random = True
-    if patchy == 0:
-        patchy_random = True
+    if patch_x == 0:
+        patch_x_random = True
+    if patch_y == 0:
+        patch_y_random = True
 
     if patches < min_patches:
         patches = min_patches
@@ -31,14 +31,14 @@ def effect_random_pixel_shift(img, offset_range=100, patchx=0, patchy=0, patches
     # else, run regular loop thru whole img
     for p in range(patches):
         # If patch size is left at 0, randomize!
-        if patchx_random:
-            patchx = random.randrange(int(width // 10), int(width // 7))
-        if patchy_random:
-            patchy = random.randrange(int(height // 13), int(height // 8))
-        istart = random.randrange(0 + patchx, width - patchx)
-        jstart = random.randrange(0 + patchy, height - patchy)
-        for i in range(istart, istart + patchx):  # NOTE the usage of 1,w-1; 1,h-1
-            for j in range(jstart, jstart + patchy):
+        if patch_x_random:
+            patch_x = random.randrange(int(width // 10), int(width // 7))
+        if patch_y_random:
+            patch_y = random.randrange(int(height // 13), int(height // 8))
+        istart = random.randrange(0 + patch_x, width - patch_x)
+        jstart = random.randrange(0 + patch_y, height - patch_y)
+        for i in range(istart, istart + patch_x):  # NOTE the usage of 1,w-1; 1,h-1
+            for j in range(jstart, jstart + patch_y):
                 # Determine if we will shift:
                 do_shift = random.randrange(0, 3)
                 if do_shift == 0:
@@ -74,8 +74,8 @@ def effect_horiz_shift(img):
     :param img:
     :return new_img:
     """
-    height = img.shape[0]  # j, patchy
-    width = img.shape[1]  # i, patchx
+    height = img.shape[0]  # j, patch_y
+    width = img.shape[1]  # i, patch_x
     new_img = np.copy(img)
     patches = random.randrange(3, 7)
     low = 1.07
@@ -86,10 +86,10 @@ def effect_horiz_shift(img):
     # Loop thru patches:
     for p in range(patches):
         # Get patch size, shift amt, and end of patch window
-        patchy = random.randrange(5, int(height // 1.2))
-        patchysize = random.randrange(10, int(height // 4))
+        patch_y = random.randrange(5, int(height // 1.2))
+        patch_y_size = random.randrange(10, int(height // 4))
         shift = random.randrange(10, int(width // 5))
-        patchend = patchy + patchysize
+        patchend = patch_y + patch_y_size
         if patchend >= height:  # ensure within size limit
             patchend = height - 1
 
@@ -107,7 +107,7 @@ def effect_horiz_shift(img):
 
         # Loop thru patch window
         for i in range(width):
-            for j in range(patchy, patchend):
+            for j in range(patch_y, patchend):
                 # Get actual shift amount, and determine if overflow:
                 shift_result = i - shift
                 if shift_result < 0:

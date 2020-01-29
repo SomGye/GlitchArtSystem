@@ -51,13 +51,13 @@ def effect_color_smear(img, patchx=0, patchy=0, patches=5):
         # Loop thru window
         for i in range(istart, istart + patchx):
             # Copy initial color (per column):
-            colorvalb = img[jstart, i, 0]
-            colorvalg = img[jstart, i, 1]
-            colorvalr = img[jstart, i, 2]
+            color_val_b = img[jstart, i, 0]
+            color_val_g = img[jstart, i, 1]
+            color_val_r = img[jstart, i, 2]
             for j in range(jstart, jstart + patchy):
-                new_img[j, i, 0] = colorvalb
-                new_img[j, i, 1] = colorvalg
-                new_img[j, i, 2] = colorvalr
+                new_img[j, i, 0] = color_val_b
+                new_img[j, i, 1] = color_val_g
+                new_img[j, i, 2] = color_val_r
     return new_img
 
 
@@ -114,19 +114,19 @@ def effect_color_scratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
                 # Choose amount to scratch over
                 scratchamt = random.randrange(5, patchy)
                 # Copy initial color (per column):
-                colorvalb = img[jstart, i, 0]
-                colorvalg = img[jstart, i, 1]
-                colorvalr = img[jstart, i, 2]
+                color_val_b = img[jstart, i, 0]
+                color_val_g = img[jstart, i, 1]
+                color_val_r = img[jstart, i, 2]
                 # Get max
-                colormax = max([colorvalb, colorvalg, colorvalr])
+                color_max = max([color_val_b, color_val_g, color_val_r])
                 for j in range(jstart, jstart + scratchamt):
                     # Pick channel
-                    if (colormax == colorvalb):
-                        new_img[j, i, 0] = colorvalb
-                    elif (colormax == colorvalg):
-                        new_img[j, i, 1] = colorvalg
-                    elif (colormax == colorvalr):
-                        new_img[j, i, 2] = colorvalr
+                    if (color_max == color_val_b):
+                        new_img[j, i, 0] = color_val_b
+                    elif (color_max == color_val_g):
+                        new_img[j, i, 1] = color_val_g
+                    elif (color_max == color_val_r):
+                        new_img[j, i, 2] = color_val_r
         else:
             # Loop thru window
             scratchamt = random.randrange(5, patchx)
@@ -135,18 +135,18 @@ def effect_color_scratch(img, patchx=0, patchy=0, patches=4, scratchdir=0):
                     # Choose amount to scratch over
                     scratchamt = random.randrange(5, patchx)
                     # Copy initial color (per column):
-                    colorvalb = img[j, istart, 0]  # was jstart, i
-                    colorvalg = img[j, istart, 1]
-                    colorvalr = img[j, istart, 2]
+                    color_val_b = img[j, istart, 0]  # was jstart, i
+                    color_val_g = img[j, istart, 1]
+                    color_val_r = img[j, istart, 2]
                     # Get max
-                    colormax = max([colorvalb, colorvalg, colorvalr])
+                    color_max = max([color_val_b, color_val_g, color_val_r])
                     # Pick channel
-                    if (colormax == colorvalb):
-                        new_img[j, i, 0] = colorvalb
-                    elif (colormax == colorvalg):
-                        new_img[j, i, 1] = colorvalg
-                    elif (colormax == colorvalr):
-                        new_img[j, i, 2] = colorvalr
+                    if (color_max == color_val_b):
+                        new_img[j, i, 0] = color_val_b
+                    elif (color_max == color_val_g):
+                        new_img[j, i, 1] = color_val_g
+                    elif (color_max == color_val_r):
+                        new_img[j, i, 2] = color_val_r
     return new_img
 
 
@@ -192,6 +192,128 @@ def effect_color_compression(img, patches=4):
                     new_img[j, i, 1] = int(img[j, i, 1] // 1.4)
                     new_img[j, i, 2] = img[j, i, 2]
     return new_img
+
+
+# Define Harris Color Shift Stripe solution:
+def harris_color_shift_striping(img, corner_img, x, y, width):
+    """
+    Subsidiary function to do color attenuation in "stripes",
+     dependent on dominant color channel, for Harris Color Shift.
+    :param img:
+    :param corner_img:
+    :param x:
+    :param y:
+    :param width:
+    :return corner_img:
+    """
+    # Copy initial color:
+    color_val_b = img[y, x, 0]
+    color_val_g = img[y, x, 1]
+    color_val_r = img[y, x, 2]
+    # Get max
+    color_max = max([color_val_b, color_val_g, color_val_r])
+    # Check if left/right side of half
+    if x < (width // 2):
+        # Pick channel
+        if color_max == color_val_b:
+            # Stripe 1
+            corner_img[y, x + 1, 0] = color_val_b
+            corner_img[y, x + 1, 1] = color_val_g // 2
+            corner_img[y, x + 1, 2] = color_val_r // 3
+            # Stripe 2
+            corner_img[y, x + 2, 0] = color_val_b // 2
+            corner_img[y, x + 2, 1] = color_val_g
+            corner_img[y, x + 2, 2] = color_val_r // 2
+            # Stripe 3
+            corner_img[y, x + 3, 0] = color_val_b // 3
+            corner_img[y, x + 3, 1] = color_val_g // 2
+            corner_img[y, x + 3, 2] = color_val_r
+            corner_img[y, x + 4, 0] = color_val_b // 3
+            corner_img[y, x + 4, 1] = color_val_g // 2
+            corner_img[y, x + 4, 2] = color_val_r
+        elif color_max == color_val_g:
+            # Stripe 1
+            corner_img[y, x + 1, 0] = color_val_b // 2
+            corner_img[y, x + 1, 1] = color_val_g
+            corner_img[y, x + 1, 2] = color_val_r // 2
+            # Stripe 2
+            corner_img[y, x + 2, 0] = color_val_b // 3
+            corner_img[y, x + 2, 1] = color_val_g // 2
+            corner_img[y, x + 2, 2] = color_val_r
+            # Stripe 3
+            corner_img[y, x + 3, 0] = color_val_b
+            corner_img[y, x + 3, 1] = color_val_g // 2
+            corner_img[y, x + 3, 2] = color_val_r // 3
+            corner_img[y, x + 4, 0] = color_val_b
+            corner_img[y, x + 4, 1] = color_val_g // 2
+            corner_img[y, x + 4, 2] = color_val_r // 3
+        elif color_max == color_val_r:
+            # Stripe 1
+            corner_img[y, x + 1, 0] = color_val_b // 3
+            corner_img[y, x + 1, 1] = color_val_g // 2
+            corner_img[y, x + 1, 2] = color_val_r
+            # Stripe 2
+            corner_img[y, x + 2, 0] = color_val_b
+            corner_img[y, x + 2, 1] = color_val_g // 2
+            corner_img[y, x + 2, 2] = color_val_r // 3
+            # Stripe 3
+            corner_img[y, x + 3, 0] = color_val_b // 2
+            corner_img[y, x + 3, 1] = color_val_g
+            corner_img[y, x + 3, 2] = color_val_r // 2
+            corner_img[y, x + 4, 0] = color_val_b // 2
+            corner_img[y, x + 4, 1] = color_val_g
+            corner_img[y, x + 4, 2] = color_val_r // 2
+    elif x > (width // 2):
+        # Pick channel
+        if color_max == color_val_b:
+            # Stripe 1
+            corner_img[y, x - 1, 0] = color_val_b
+            corner_img[y, x - 1, 1] = color_val_g // 2
+            corner_img[y, x - 1, 2] = color_val_r // 3
+            # Stripe 2
+            corner_img[y, x - 2, 0] = color_val_b // 2
+            corner_img[y, x - 2, 1] = color_val_g
+            corner_img[y, x - 2, 2] = color_val_r // 2
+            # Stripe 3
+            corner_img[y, x - 3, 0] = color_val_b // 3
+            corner_img[y, x - 3, 1] = color_val_g // 2
+            corner_img[y, x - 3, 2] = color_val_r
+            corner_img[y, x - 4, 0] = color_val_b // 3
+            corner_img[y, x - 4, 1] = color_val_g // 2
+            corner_img[y, x - 4, 2] = color_val_r
+        elif color_max == color_val_g:
+            # Stripe 1
+            corner_img[y, x - 1, 0] = color_val_b // 2
+            corner_img[y, x - 1, 1] = color_val_g
+            corner_img[y, x - 1, 2] = color_val_r // 2
+            # Stripe 2
+            corner_img[y, x - 2, 0] = color_val_b // 3
+            corner_img[y, x - 2, 1] = color_val_g // 2
+            corner_img[y, x - 2, 2] = color_val_r
+            # Stripe 3
+            corner_img[y, x - 3, 0] = color_val_b
+            corner_img[y, x - 3, 1] = color_val_g // 2
+            corner_img[y, x - 3, 2] = color_val_r // 3
+            corner_img[y, x - 4, 0] = color_val_b
+            corner_img[y, x - 4, 1] = color_val_g // 2
+            corner_img[y, x - 4, 2] = color_val_r // 3
+        elif color_max == color_val_r:
+            # Stripe 1
+            corner_img[y, x - 1, 0] = color_val_b // 3
+            corner_img[y, x - 1, 1] = color_val_g // 2
+            corner_img[y, x - 1, 2] = color_val_r
+            # Stripe 2
+            corner_img[y, x - 2, 0] = color_val_b
+            corner_img[y, x - 2, 1] = color_val_g // 2
+            corner_img[y, x - 2, 2] = color_val_r // 3
+            # Stripe 3
+            corner_img[y, x - 3, 0] = color_val_b // 2
+            corner_img[y, x - 3, 1] = color_val_g
+            corner_img[y, x - 3, 2] = color_val_r // 2
+            corner_img[y, x - 4, 0] = color_val_b // 2
+            corner_img[y, x - 4, 1] = color_val_g
+            corner_img[y, x - 4, 2] = color_val_r // 2
+        return corner_img
 
 
 def effect_harris_edge_color_shift(img, img_g):
@@ -252,113 +374,8 @@ def effect_harris_edge_color_shift(img, img_g):
             # If corner response is over threshold, mark it as valid (red):
             if do_harris == 0:
                 if (r < -599000000) or (r > threshold):  # test for edges/corners
-                    # Copy initial color:
-                    colorvalb = img[y, x, 0]
-                    colorvalg = img[y, x, 1]
-                    colorvalr = img[y, x, 2]
-                    # Get max
-                    colormax = max([colorvalb, colorvalg, colorvalr])
-                    # Check if left/right side of half
-                    if x < (width // 2):
-                        # Pick channel
-                        if colormax == colorvalb:
-                            # Stripe 1
-                            corner_img[y, x + 1, 0] = colorvalb
-                            corner_img[y, x + 1, 1] = colorvalg // 2
-                            corner_img[y, x + 1, 2] = colorvalr // 3
-                            # Stripe 2
-                            corner_img[y, x + 2, 0] = colorvalb // 2
-                            corner_img[y, x + 2, 1] = colorvalg
-                            corner_img[y, x + 2, 2] = colorvalr // 2
-                            # Stripe 3
-                            corner_img[y, x + 3, 0] = colorvalb // 3
-                            corner_img[y, x + 3, 1] = colorvalg // 2
-                            corner_img[y, x + 3, 2] = colorvalr
-                            corner_img[y, x + 4, 0] = colorvalb // 3
-                            corner_img[y, x + 4, 1] = colorvalg // 2
-                            corner_img[y, x + 4, 2] = colorvalr
-                        elif colormax == colorvalg:
-                            # Stripe 1
-                            corner_img[y, x + 1, 0] = colorvalb // 2
-                            corner_img[y, x + 1, 1] = colorvalg
-                            corner_img[y, x + 1, 2] = colorvalr // 2
-                            # Stripe 2
-                            corner_img[y, x + 2, 0] = colorvalb // 3
-                            corner_img[y, x + 2, 1] = colorvalg // 2
-                            corner_img[y, x + 2, 2] = colorvalr
-                            # Stripe 3
-                            corner_img[y, x + 3, 0] = colorvalb
-                            corner_img[y, x + 3, 1] = colorvalg // 2
-                            corner_img[y, x + 3, 2] = colorvalr // 3
-                            corner_img[y, x + 4, 0] = colorvalb
-                            corner_img[y, x + 4, 1] = colorvalg // 2
-                            corner_img[y, x + 4, 2] = colorvalr // 3
-                        elif colormax == colorvalr:
-                            # Stripe 1
-                            corner_img[y, x + 1, 0] = colorvalb // 3
-                            corner_img[y, x + 1, 1] = colorvalg // 2
-                            corner_img[y, x + 1, 2] = colorvalr
-                            # Stripe 2
-                            corner_img[y, x + 2, 0] = colorvalb
-                            corner_img[y, x + 2, 1] = colorvalg // 2
-                            corner_img[y, x + 2, 2] = colorvalr // 3
-                            # Stripe 3
-                            corner_img[y, x + 3, 0] = colorvalb // 2
-                            corner_img[y, x + 3, 1] = colorvalg
-                            corner_img[y, x + 3, 2] = colorvalr // 2
-                            corner_img[y, x + 4, 0] = colorvalb // 2
-                            corner_img[y, x + 4, 1] = colorvalg
-                            corner_img[y, x + 4, 2] = colorvalr // 2
-                    elif x > (width // 2):
-                        # Pick channel
-                        if colormax == colorvalb:
-                            # Stripe 1
-                            corner_img[y, x - 1, 0] = colorvalb
-                            corner_img[y, x - 1, 1] = colorvalg // 2
-                            corner_img[y, x - 1, 2] = colorvalr // 3
-                            # Stripe 2
-                            corner_img[y, x - 2, 0] = colorvalb // 2
-                            corner_img[y, x - 2, 1] = colorvalg
-                            corner_img[y, x - 2, 2] = colorvalr // 2
-                            # Stripe 3
-                            corner_img[y, x - 3, 0] = colorvalb // 3
-                            corner_img[y, x - 3, 1] = colorvalg // 2
-                            corner_img[y, x - 3, 2] = colorvalr
-                            corner_img[y, x - 4, 0] = colorvalb // 3
-                            corner_img[y, x - 4, 1] = colorvalg // 2
-                            corner_img[y, x - 4, 2] = colorvalr
-                        elif colormax == colorvalg:
-                            # Stripe 1
-                            corner_img[y, x - 1, 0] = colorvalb // 2
-                            corner_img[y, x - 1, 1] = colorvalg
-                            corner_img[y, x - 1, 2] = colorvalr // 2
-                            # Stripe 2
-                            corner_img[y, x - 2, 0] = colorvalb // 3
-                            corner_img[y, x - 2, 1] = colorvalg // 2
-                            corner_img[y, x - 2, 2] = colorvalr
-                            # Stripe 3
-                            corner_img[y, x - 3, 0] = colorvalb
-                            corner_img[y, x - 3, 1] = colorvalg // 2
-                            corner_img[y, x - 3, 2] = colorvalr // 3
-                            corner_img[y, x - 4, 0] = colorvalb
-                            corner_img[y, x - 4, 1] = colorvalg // 2
-                            corner_img[y, x - 4, 2] = colorvalr // 3
-                        elif colormax == colorvalr:
-                            # Stripe 1
-                            corner_img[y, x - 1, 0] = colorvalb // 3
-                            corner_img[y, x - 1, 1] = colorvalg // 2
-                            corner_img[y, x - 1, 2] = colorvalr
-                            # Stripe 2
-                            corner_img[y, x - 2, 0] = colorvalb
-                            corner_img[y, x - 2, 1] = colorvalg // 2
-                            corner_img[y, x - 2, 2] = colorvalr // 3
-                            # Stripe 3
-                            corner_img[y, x - 3, 0] = colorvalb // 2
-                            corner_img[y, x - 3, 1] = colorvalg
-                            corner_img[y, x - 3, 2] = colorvalr // 2
-                            corner_img[y, x - 4, 0] = colorvalb // 2
-                            corner_img[y, x - 4, 1] = colorvalg
-                            corner_img[y, x - 4, 2] = colorvalr // 2
+                    # Perform Harris Color Shift, in stripes:
+                    corner_img = harris_color_shift_striping(img, corner_img, x, y, width)
     return corner_img
 
 
@@ -443,8 +460,8 @@ def effect_convolution_edge_dilation(img, patches=2):
     width = img.shape[1]  # i, patchx
 
     convo_matrix = np.array([[0, 1, 0],
-                            [1, -4, 1],
-                            [0, 1, 0]])  # edge detect
+                             [1, -4, 1],
+                             [0, 1, 0]])  # edge detect
 
     for p in range(patches):
         do_any = random.randrange(0, 4)
@@ -517,17 +534,17 @@ def effect_convolution_dynamic(img, patches=2):
     # If random_each false, just generate kernel once!
     if random_each == 0:
         convo_matrix = np.array([[random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
-                                [random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
-                                [random.randrange(-2, 3), random.randrange(-2, 3),
-                                 random.randrange(-2, 3)]])  # DYNAMIC, -2->2
+                                 [random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
+                                 [random.randrange(-2, 3), random.randrange(-2, 3),
+                                  random.randrange(-2, 3)]])  # DYNAMIC, -2->2
 
     for p in range(patches):
         # If random_each is true, generate convolution kernel EACH PATCH
         if random_each != 0:
             convo_matrix = np.array([[random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
-                                    [random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
-                                    [random.randrange(-2, 3), random.randrange(-2, 3),
-                                     random.randrange(-2, 3)]])  # DYNAMIC, -2->2
+                                     [random.randrange(-2, 3), random.randrange(-2, 3), random.randrange(-2, 3)],
+                                     [random.randrange(-2, 3), random.randrange(-2, 3),
+                                      random.randrange(-2, 3)]])  # DYNAMIC, -2->2
         do_any = random.randrange(0, 4)  # randomly allow null patch
         if do_any == 0:
             continue

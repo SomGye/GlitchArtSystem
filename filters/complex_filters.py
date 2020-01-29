@@ -148,35 +148,35 @@ def effect_scanlines(img, lines=5):
                     use_thick_line = random.randrange(0, 4)  # determine if thicker or not
                     if use_color == 0:
                         # Copy initial color:
-                        colorvalb = img[randomj, i, 0]
-                        colorvalg = img[randomj, i, 1]
-                        colorvalr = img[randomj, i, 2]
+                        color_val_b = img[randomj, i, 0]
+                        color_val_g = img[randomj, i, 1]
+                        color_val_r = img[randomj, i, 2]
                         # Determine dominant color and half others:
-                        color_max = max([colorvalb, colorvalg, colorvalr])
-                        if color_max == colorvalb:
-                            new_img[randomj, i, 0] = colorvalb
-                            new_img[randomj, i, 1] = colorvalg // 2
-                            new_img[randomj, i, 2] = colorvalr // 2
+                        color_max = max([color_val_b, color_val_g, color_val_r])
+                        if color_max == color_val_b:
+                            new_img[randomj, i, 0] = color_val_b
+                            new_img[randomj, i, 1] = color_val_g // 2
+                            new_img[randomj, i, 2] = color_val_r // 2
                             if use_thick_line != 0:
-                                new_img[randomj + 1, i, 0] = colorvalb
-                                new_img[randomj + 1, i, 1] = colorvalg // 2
-                                new_img[randomj + 1, i, 2] = colorvalr // 2
-                        elif color_max == colorvalg:
-                            new_img[randomj, i, 0] = colorvalb // 2
-                            new_img[randomj, i, 1] = colorvalg
-                            new_img[randomj, i, 2] = colorvalr // 2
+                                new_img[randomj + 1, i, 0] = color_val_b
+                                new_img[randomj + 1, i, 1] = color_val_g // 2
+                                new_img[randomj + 1, i, 2] = color_val_r // 2
+                        elif color_max == color_val_g:
+                            new_img[randomj, i, 0] = color_val_b // 2
+                            new_img[randomj, i, 1] = color_val_g
+                            new_img[randomj, i, 2] = color_val_r // 2
                             if use_thick_line != 0:
-                                new_img[randomj + 1, i, 0] = colorvalb // 2
-                                new_img[randomj + 1, i, 1] = colorvalg
-                                new_img[randomj + 1, i, 2] = colorvalr // 2
-                        elif color_max == colorvalr:
-                            new_img[randomj, i, 0] = colorvalb // 2
-                            new_img[randomj, i, 1] = colorvalg // 2
-                            new_img[randomj, i, 2] = colorvalr
+                                new_img[randomj + 1, i, 0] = color_val_b // 2
+                                new_img[randomj + 1, i, 1] = color_val_g
+                                new_img[randomj + 1, i, 2] = color_val_r // 2
+                        elif color_max == color_val_r:
+                            new_img[randomj, i, 0] = color_val_b // 2
+                            new_img[randomj, i, 1] = color_val_g // 2
+                            new_img[randomj, i, 2] = color_val_r
                             if use_thick_line != 0:
-                                new_img[randomj + 1, i, 0] = colorvalb // 2
-                                new_img[randomj + 1, i, 1] = colorvalg // 2
-                                new_img[randomj + 1, i, 2] = colorvalr
+                                new_img[randomj + 1, i, 0] = color_val_b // 2
+                                new_img[randomj + 1, i, 1] = color_val_g // 2
+                                new_img[randomj + 1, i, 2] = color_val_r
                     else:
                         spot_color = random.randrange(int(max_color // 6), int(max_color // 1.6))  # roughly 42->159
                         new_img[randomj, i, 0] = spot_color  # was j,i
@@ -371,17 +371,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     if option == 1:  # top half
         for i in range(width):
             # Copy initial color:
-            colorvalb = img[0, i, 0]
-            colorvalg = img[0, i, 1]
-            colorvalr = img[0, i, 2]
+            color_val_b = img[0, i, 0]
+            color_val_g = img[0, i, 1]
+            color_val_r = img[0, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height // 2):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -392,17 +392,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 2:  # bottom half
         for i in range(width):
             # Copy initial color:
-            colorvalb = img[height // 2, i, 0]
-            colorvalg = img[height // 2, i, 1]
-            colorvalr = img[height // 2, i, 2]
+            color_val_b = img[height // 2, i, 0]
+            color_val_g = img[height // 2, i, 1]
+            color_val_r = img[height // 2, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height // 2, height):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -413,17 +413,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 3:  # left half
         for i in range(width // 2):
             # Copy initial color:
-            colorvalb = img[0, i, 0]
-            colorvalg = img[0, i, 1]
-            colorvalr = img[0, i, 2]
+            color_val_b = img[0, i, 0]
+            color_val_g = img[0, i, 1]
+            color_val_r = img[0, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -434,17 +434,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 4:  # right half
         for i in range(width // 2, width):
             # Copy initial color:
-            colorvalb = img[0, i, 0]
-            colorvalg = img[0, i, 1]
-            colorvalr = img[0, i, 2]
+            color_val_b = img[0, i, 0]
+            color_val_g = img[0, i, 1]
+            color_val_r = img[0, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -455,17 +455,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 5:  # top left
         for i in range(width // 2):
             # Copy initial color:
-            colorvalb = img[0, i, 0]
-            colorvalg = img[0, i, 1]
-            colorvalr = img[0, i, 2]
+            color_val_b = img[0, i, 0]
+            color_val_g = img[0, i, 1]
+            color_val_r = img[0, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height // 2):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -476,17 +476,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 6:  # top right
         for i in range(width // 2, width):
             # Copy initial color:
-            colorvalb = img[0, i, 0]
-            colorvalg = img[0, i, 1]
-            colorvalr = img[0, i, 2]
+            color_val_b = img[0, i, 0]
+            color_val_g = img[0, i, 1]
+            color_val_r = img[0, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height // 2):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -497,17 +497,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 7:  # bottom left
         for i in range(width // 2):
             # Copy initial color:
-            colorvalb = img[height // 2, i, 0]
-            colorvalg = img[height // 2, i, 1]
-            colorvalr = img[height // 2, i, 2]
+            color_val_b = img[height // 2, i, 0]
+            color_val_g = img[height // 2, i, 1]
+            color_val_r = img[height // 2, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height // 2, height):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
@@ -518,17 +518,17 @@ def effect_copy_over_color_distort(img, orig_img, option=0):
     elif option == 8:  # bottom right
         for i in range(width // 2, width):
             # Copy initial color:
-            colorvalb = img[height // 2, i, 0]
-            colorvalg = img[height // 2, i, 1]
-            colorvalr = img[height // 2, i, 2]
+            color_val_b = img[height // 2, i, 0]
+            color_val_g = img[height // 2, i, 1]
+            color_val_r = img[height // 2, i, 2]
             # Determine dominant color and half others:
-            color_max = max([colorvalb, colorvalg, colorvalr])
+            color_max = max([color_val_b, color_val_g, color_val_r])
             for j in range(height // 2, height):
-                if color_max == colorvalb:
+                if color_max == color_val_b:
                     new_img[j, i, 0] = orig_img[j, i, 0]
                     new_img[j, i, 1] = int(orig_img[j, i, 1] // 1.3)
                     new_img[j, i, 2] = orig_img[j, i, 2] // 2
-                elif color_max == colorvalg:
+                elif color_max == color_val_g:
                     new_img[j, i, 0] = int(orig_img[j, i, 0] // 1.3)
                     new_img[j, i, 1] = orig_img[j, i, 1]
                     new_img[j, i, 2] = int(orig_img[j, i, 2] // 1.3)
