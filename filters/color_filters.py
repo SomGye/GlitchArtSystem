@@ -313,7 +313,7 @@ def harris_color_shift_striping(img, corner_img, x, y, width):
             corner_img[y, x - 4, 0] = color_val_b // 2
             corner_img[y, x - 4, 1] = color_val_g
             corner_img[y, x - 4, 2] = color_val_r // 2
-        return corner_img
+    return corner_img
 
 
 def effect_harris_edge_color_shift(img, img_g):
