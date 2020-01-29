@@ -1,0 +1,1 @@
+python GAS.py test.jpg
